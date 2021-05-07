@@ -420,3 +420,28 @@ brew install exa
 有一些比较敏感的就不推荐了(世界那么大,你不想看看!知识怎么学习的快!)
 
 倘若盲目的去找工具,装那么一大坨很少用或者基本不会用到.纯属浪费生命和电脑磁盘空间
+
+软件推荐：
+
+git-fork
+
+命令推荐：
+
+kafkacat
+
+安装命令
+
+`brew install kafkacat`
+
+# 查看过滤出来的文件
+$ find . -name '.DS_Store'
+# 删除
+$ find . -name '.DS_Store' -type f -exec rm -f {} \;
+# 再次检查
+$ find . -name '.DS_Store'
+
+maven 4个线程执行
+
+```
+mvn -T 4 clean install
+```
