@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Hi, DIYgod</title>
+  
+  
+  <link href="https://diygod.me/atom.xml" rel="self"/>
+  
+  <link href="https://diygod.me/"/>
+  <updated>2021-05-07T15:17:30.485Z</updated>
+  <id>https://diygod.me/</id>
+  
+  <author>
+    <name>DIYgod</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用pm2后台运行hexo</title>
+    <link href="https://diygod.me/%E7%94%A8pm2%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8Chexo/"/>
+    <id>https://diygod.me/%E7%94%A8pm2%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8Chexo/</id>
+    <published>2021-05-07T09:40:19.000Z</published>
+    <updated>2021-05-07T15:17:30.485Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>安装pm2</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm  install -g pm2</span><br></pre></td></tr></table></figure><p>在博客根目录下面创建一个<strong>hexo_run.js</strong></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//run</span></span><br><span class="line"><span class="keyword">const</span> &#123; exec &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line">exec(<span class="string">&#x27;hexo server&#x27;</span>,<span class="function">(<span class="params">error, stdout, stderr</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(error)&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">&#x27;exec error: $&#123;error&#125;&#x27;</span>)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;stdout: $&#123;stdout&#125;&#x27;</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;stderr: $&#123;stderr&#125;&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><p>在根目录下</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start hexo_run.js</span><br></pre></td></tr></table></figure><p>结果如下图</p><p><img src="%E7%94%A8pm2%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8Chexo/image-20210507231725024-0400648.png" alt="image-20210507231725024"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;strong&gt;安装pm2&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>iceberg-flink设置</title>
+    <link href="https://diygod.me/iceberg-flink%E8%AE%BE%E7%BD%AE/"/>
+    <id>https://diygod.me/iceberg-flink%E8%AE%BE%E7%BD%AE/</id>
+    <published>2021-04-29T05:00:10.000Z</published>
+    <updated>2021-05-07T03:47:45.788Z</updated>
+    
+    <content type="html"><![CDATA[<p>1.下载flink</p><p><code>wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.11.3/flink-1.11.3-bin-scala_2.12.tgz</code></p><p>2.修改start-cluster.sh</p><p>添加如下内容</p><p><code>export HADOOP_CLASSPATH=$HADOOP_HOME/bin/hadoop classpath</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;start-cluster.sh</span><br></pre></td></tr></table></figure><p>wget <a href="https://repo.maven.apache.org/maven2/org/apache/iceberg/iceberg-flink-runtime/0.10.0/iceberg-flink-runtime-0.10.0.jar">https://repo.maven.apache.org/maven2/org/apache/iceberg/iceberg-flink-runtime/0.10.0/iceberg-flink-runtime-0.10.0.jar</a></p><p>wget <a href="https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-hive-2.3.6_2.11/1.11.0/flink-sql-connector-hive-2.3.6_2.11-1.11.0.jar">https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-hive-2.3.6_2.11/1.11.0/flink-sql-connector-hive-2.3.6_2.11-1.11.0.jar</a></p><p>启动shell</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;sql-client.sh embedded \</span><br><span class="line">    -j &#x2F;Users&#x2F;Terminus&#x2F;software&#x2F;flink-1.11.3&#x2F;plugins&#x2F;iceberg&#x2F;iceberg-flink-runtime-0.10.0.jar \</span><br><span class="line">    -j &#x2F;Users&#x2F;Terminus&#x2F;software&#x2F;flink-1.11.3&#x2F;plugins&#x2F;iceberg&#x2F;flink-sql-connector-hive-2.3.6_2.11-1.11.0.jar \</span><br><span class="line">    shell</span><br></pre></td></tr></table></figure><p>创建hive catalog</p><p><code>CREATE CATALOG hive_catalog WITH (</code><br>  <code>&#39;type&#39;=&#39;iceberg&#39;,</code><br>  <code>&#39;catalog-type&#39;=&#39;hive&#39;,</code><br>  <code>&#39;uri&#39;=&#39;thrift://localhost:9083&#39;,</code><br>  <code>&#39;clients&#39;=&#39;5&#39;,</code><br>  <code>&#39;property-version&#39;=&#39;1&#39;,</code><br>  <code>&#39;warehouse&#39;=&#39;hdfs://nn:8020/warehouse/path&#39;</code><br><code>);</code></p><p>Hdfs 启动</p><p>ssh免密</p><p>vim authorized_keys </p><p>第一步格式hdfs</p><p>hadoop namenode -format</p><p><code>start-dfs.sh</code> </p><p>启动hive-metastore</p><p>VI hive-site.xml</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.metastore.uris<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">value</span>&gt;</span>thrift://localhost:9083<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure><p>Hive 数据库初始化：</p><p>hdfs dfs -mkdir -p /tmp/hive</p><p> hdfs dfs -mkdir -p /hive/warehouse</p><p> hdfs dfs -chmod -R g+w,o+w /tmp </p><p>hdfs dfs -chmod -R g+w,o+w /hive </p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">schematool -dbType mysql -initSchema</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive --service metastore</span><br></pre></td></tr></table></figure><p>flink-hive</p><p>要配置环境变量</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HIVE_CONF_DIR&#x3D;$&#123;HIVE_HOME&#125;&#x2F;conf</span><br></pre></td></tr></table></figure><p>CREATE CATALOG hive_catalog WITH (<br>  ‘type’=’iceberg’,<br>  ‘catalog-type’=’hive’,<br>  ‘uri’=’thrift://localhost:9083’,<br>  ‘clients’=’5’,<br>  ‘property-version’=’1’,<br>  ‘warehouse’=’hdfs://localhost:9000/hive/warehouse’<br>);</p><p>CREATE CATALOG my_catalog WITH (<br>  ‘type’=’iceberg’,<br>  ‘catalog-impl’=’com.my.custom.CatalogImpl’,<br>  ‘my-additional-catalog-config’=’my-value’<br>);</p><p>Sql-client-default.yaml配置：</p><p>catalogs: # empty list</p><ul><li><p>name: gmall<br>type: hive<br>hive-conf-dir: /opt/module/hive/conf/<br>hive-version: 1.2.1<br>default-database: gmallFlink SQL&gt; CREATE TABLE gmall.gmall.sample (</p><blockquote><pre><code>`id BIGINT COMMENT &#39;unique id&#39;,``data STRING``);``[INFO] Table has been created.`</code></pre></blockquote></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE  gmall.gmall.sample_like LIKE gmall.gmall.sample;</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE gmall.gmall.sample SET (&#39;write.format.default&#39;&#x3D;&#39;avro&#39;)</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE gmall.gmall.sample RENAME TO gmall.gmall.new_sample;</span><br><span class="line">DROP TABLE gmall.gmall.sample;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>CREATE CATALOG hive_catalog WITH (<br>  ‘type’=’iceberg’,<br>  ‘catalog-type’=’hive’,<br>  ‘uri’=’thrift://localhost:9083’,<br>  ‘clients’=’5’,<br>  ‘property-version’=’1’,<br>  ‘warehouse’=’hdfs://localhost:8020/hive/warehouse’<br>);</p><p>CREATE TABLE sample (<br>    id BIGINT COMMENT ‘unique id’,<br>    data STRING<br>);</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;1.下载flink&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.11.3/flink-1.11.3-bin-scala_2.12.tgz&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>nginx设置</title>
+    <link href="https://diygod.me/nginx%E8%AE%BE%E7%BD%AE/"/>
+    <id>https://diygod.me/nginx%E8%AE%BE%E7%BD%AE/</id>
+    <published>2021-04-29T02:45:53.000Z</published>
+    <updated>2021-04-29T02:47:57.747Z</updated>
+    
+    <content type="html"><![CDATA[<p>nginx相关命令</p><p> <code>nginx -s reload</code></p><p>nginx安装</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;nginx相关命令&lt;/p&gt;
+&lt;p&gt; &lt;code&gt;nginx -s reload&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;nginx安装&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>macos设置</title>
+    <link href="https://diygod.me/macos%E8%AE%BE%E7%BD%AE/"/>
+    <id>https://diygod.me/macos%E8%AE%BE%E7%BD%AE/</id>
+    <published>2021-04-28T07:49:27.000Z</published>
+    <updated>2021-04-29T02:45:30.046Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="必要姿势-允许安装任何来源程序"><a href="#必要姿势-允许安装任何来源程序" class="headerlink" title="必要姿势: 允许安装任何来源程序"></a>必要姿势: 允许安装任何来源程序</h3><p>打开终端 -&gt; <code>sudo spctl --master-disable</code> . 滴滴答答,输入你的管理员密码就解开了</p><p>当提示资源已损坏，请移入回收站，请用以下方式</p><p><strong><code>运行“终端”，然后复制这段代码“- [ ] sudo xattr -r -d com.apple.quarantine”，然后上“访达”找到“应用程序”里有问题的那个软件，把它拖到“终端”这段代码的页面，然后输入本机密码（密码不显示，输入完回车就可以），接下来就是见证奇迹的时刻了~</code></strong></p><h2 id="工作流-花样姿势"><a href="#工作流-花样姿势" class="headerlink" title="工作流(花样姿势)"></a>工作流(花样姿势)</h2><blockquote><p>有了基础的包管理和服务管理,我们才能耍的更好</p></blockquote><h3 id="必要姿势-允许安装任何来源程序-1"><a href="#必要姿势-允许安装任何来源程序-1" class="headerlink" title="必要姿势: 允许安装任何来源程序"></a>必要姿势: 允许安装任何来源程序</h3><p>在 macos 10.12+开始,这个允许安装任何来源的应用功能就给安全机制(官方说为了安全,你信么!!)给屏蔽了…</p><p>但是有木有法子解开呢…我列出来肯定有了啦..姿势如下!</p><p>打开终端 -&gt; <code>sudo spctl --master-disable</code> . 滴滴答答,输入你的管理员密码就解开了</p><h3 id="姿势1-快速预览"><a href="#姿势1-快速预览" class="headerlink" title="姿势1: 快速预览"></a>姿势1: 快速预览</h3><p>快速预览是 Macos内置的一个功能,就是你选中一个文件的时候,直接空格键(<code>space</code>)可以看到一些信息.</p><p>比如图片,文档!</p><p>但是内置的往往不够强大..万能的基友的社区就有人做了这么些插件来丰富快速预览;</p><p>传送门: <a href="https://github.com/sindresorhus/quick-look-plugins">quick-look-plugins</a>;</p><p>装了这个可预览的功能起码丰富了一倍不止. 代码高亮,Markdown生成预览,excel,zip 包等等…</p><h3 id="姿势2-终端强化"><a href="#姿势2-终端强化" class="headerlink" title="姿势2: 终端强化"></a>姿势2: 终端强化</h3><p>内置的<code>terminal</code>说实在的,真不够友好…所以社区就造就了一个<code>iterm2</code></p><p>传送门 :<a href="https://www.iterm2.com/"> iterm2 : 提供了多套内置主题,可定制的东西多了</a>.</p><p>你觉得我在推崇这个? 不不不,作为一个伪前端,有什么比用前端搞的终端更来的贴心….</p><p>这个,大佬们我推崇的是这个,看下面</p><p>传送门:<a href="https://hyper.is/"><strong>Hyper</strong>: 基于 electron搞得,高度自定义,配置就是一个 js(热更新),插件都是 npm 包,各种花样 style</a></p><p>1.x系列还有一些中文输入的 bug ,但是2.x 简直好用!!可以花时间去折腾下.用过都说好!</p><p><strong>好吧,丰富的定制化只是外在的..那么内在呢?</strong> </p><p>我推崇的是这个(<code>ZSH</code>),有人说 <code>fishshell</code>!萝卜青菜各有所爱哈!</p><p>传送门: <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>;</p><p><strong>zsh推荐启用的几个插件(没有的都可以用 brew 安装)</strong>:<a href="https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins"><strong>插件列表及介绍</strong></a></p><p>打开<code>.zshrc</code>,找到 plugins 启用,名字就是插件,插件之间空格隔开</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#必备的两个插件</span><br><span class="line">brew install zsh-autosuggestions</span><br><span class="line">brew install zsh-completions</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins&#x3D;(git autojump node npm brew osx extract redis-cli autopep8 history last-working-dir</span><br><span class="line"></span><br><span class="line"> pip python sudo web-search)</span><br></pre></td></tr></table></figure><p>前几个属于必备的:</p><ol><li>git : 提供了丰富的 git <code>alias</code></li><li>autojump : 还在一直 <code>cd xxx</code>? 只要访问过的(会索引缓存路径),一键直达:<code>j(autojump) xxx</code></li><li>node : 打开 node api 文档</li><li>npm : npm 智能提示</li><li>brew: brew 的智能提示和补全</li></ol><p>后面一些看着装了.有 python 和 redis,也有访问目录的,也有直接打开搜索引擎的</p><h3 id="姿势3-你喜欢-vim"><a href="#姿势3-你喜欢-vim" class="headerlink" title="姿势3: 你喜欢 vim?"></a>姿势3: 你喜欢 vim?</h3><p>但又发现去配置一个成型的 vim 工作量太大,找各种各样的插件…</p><p>那么你可以试试这个…基于 <code>neovim(自命是 vim 与时俱进的继承者)</code> 基础上的傻瓜包</p><p>传送门: <a href="https://github.com/SpaceVim/SpaceVim">spacevim : 社区驱动的 vim 工作环境</a></p><h3 id="姿势4-Alfred"><a href="#姿势4-Alfred" class="headerlink" title="姿势4: Alfred"></a>姿势4: Alfred</h3><blockquote><p>肯定会有人说系统内置的<code>Spotlight</code>不够用么? 能索引快速跳转的地方也很多</p></blockquote><p>但是Alfred 的强大不仅仅文件的索引…而是可拓展性<code>workflows</code>;</p><p>传送门:<a href="https://www.alfredapp.com/workflows/">workflows</a>;</p><p>这货让<code>Alfred</code>的使用效率大大的提高;</p><p>这里我就推荐几个;</p><ul><li>Dash : 快速索引跳转到 dash 手册的</li><li>CalireSearch : 索引 calibre 里面的书籍进行跳转</li><li>Github repos : 快速跳转到自己的一些 github 仓(需要配置 token)</li><li>NpmSearch : 快速搜索 npmjs.org 上的某个包,直接浏览器打开</li><li>StackOverflow: .so + question 筛选出问题列表,浏览器打开</li><li>Colors: 颜色处理</li></ul><p>之前掘金还有人写了个搜索知乎的… 你动手能力够强也可以自己写一个工作流.</p><h3 id="姿势5-编辑器-IDE"><a href="#姿势5-编辑器-IDE" class="headerlink" title="姿势5: 编辑器?IDE?"></a>姿势5: 编辑器?IDE?</h3><ul><li>首推:<a href="https://code.visualstudio.com/download"><code>VSCode</code>(开源免费)</a> : 非常强大的编辑器</li><li>其次<a href="https://www.sublimetext.com/"><code>Sublime Text 3</code>(付费,但可免费使用)</a> 或者 <a href="https://atom.io/"><code>Atom</code>(开源免费)</a></li><li>最后<a href="https://www.jetbrains.com/webstorm/download/#section=mac"><code>Webstorm</code>(付费)</a></li></ul><p>若是兼顾混合开发,<strong>安卓开发</strong>首选<code>Android Studio</code>, <strong>IOS开发</strong>首选<code>XCode</code>。</p><p>具体可以参考<a href="https://flutter.io/docs/get-started/install/macos">Flutter for MacOS</a></p><h3 id="姿势6-想看个本地视频-有什么播放器推荐"><a href="#姿势6-想看个本地视频-有什么播放器推荐" class="headerlink" title="姿势6: 想看个本地视频,有什么播放器推荐!"></a>姿势6: 想看个本地视频,有什么播放器推荐!</h3><p>足够强大,格式也丰富,功能比 <code>appstore</code> 一些付费的还多,除了稳定性还有待完善,其他完美了</p><p>传送门: <a href="https://github.com/lhc70000/iina">IINA</a> , 可以用<code>brew cask</code>安装<code>brew cask install iina</code></p><h3 id="姿势7-修改-hosts"><a href="#姿势7-修改-hosts" class="headerlink" title="姿势7: 修改 hosts?"></a>姿势7: 修改 hosts?</h3><p>会命令行的直接粗暴;</p><ul><li><code>sudo vim /etc/hosts</code> : 然后保存就行</li></ul><p>那么有木有可视化工具管理!!有的..</p><p>传送门:<a href="https://github.com/oldj/SwitchHosts">SwitchHosts</a></p><h3 id="姿势8-快捷键有点多-有没有方便记忆的工具"><a href="#姿势8-快捷键有点多-有没有方便记忆的工具" class="headerlink" title="姿势8: 快捷键有点多,有没有方便记忆的工具"></a>姿势8: 快捷键有点多,有没有方便记忆的工具</h3><p>有的,<a href="https://www.mediaatelier.com/CheatSheet/"><strong>CheatSheet</strong></a>: 长按 Command 键即可调出应用程序的部分快捷键表(为什么是局部!因为有些 APP 的快捷键它读取不到)</p><h3 id="姿势9-如何远程控制协助-Mac-QQ-木有这功能"><a href="#姿势9-如何远程控制协助-Mac-QQ-木有这功能" class="headerlink" title="姿势9: 如何远程控制协助!Mac QQ 木有这功能!"></a>姿势9: 如何远程控制协助!Mac QQ 木有这功能!</h3><p>有时候遇到困难要抱好心大佬的大腿,怎么办!!</p><p>亦或者有时候看到一些菜鸟,心血来潮想”指点江山”,怎么破!</p><p>这时候就需要这个闻名已久的软件了;</p><p><a href="https://www.teamviewer.com/zhCN/">teamviewer</a>: 全平台的远程会议或协助软件,非商用免费!!!!!!(你懂的)</p><p><code>mac</code>与<code>mac</code>之间可以通过内置的远程控制来协助</p><h3 id="姿势10-让-MAC-更像-GNU-命令行更加丰富"><a href="#姿势10-让-MAC-更像-GNU-命令行更加丰富" class="headerlink" title="姿势10: 让 MAC 更像 GNU ,命令行更加丰富"></a>姿势10: 让 MAC 更像 GNU ,命令行更加丰富</h3><blockquote><p>Coreutils - GNU core utilities</p><p>The GNU Core Utilities are the basic file, shell and text manipulation utilities of the GNU operating system.</p><p>These are the core utilities which are expected to exist on every operating system.</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install coreutils</span><br></pre></td></tr></table></figure><h3 id="姿势11-exa-更现代化的ls命令-用Rust写的"><a href="#姿势11-exa-更现代化的ls命令-用Rust写的" class="headerlink" title="姿势11: exa:更现代化的ls命令,用Rust写的`"></a>姿势11: <code>exa</code>:更现代化的<code>ls</code>命令,用<code>Rust</code>写的`</h3><blockquote><p>A modern version of ‘ls’. <a href="https://the.exa.website/">https://the.exa.website/</a></p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install exa</span><br></pre></td></tr></table></figure><h3 id="姿势12-免费好用的系统维护工具"><a href="#姿势12-免费好用的系统维护工具" class="headerlink" title="姿势12: 免费好用的系统维护工具"></a>姿势12: 免费好用的系统维护工具</h3><blockquote><p>很多人去找什么<code>clean</code>的付费版,其实国内的鹅厂还是挺良心的</p></blockquote><p>-<a href="https://mac.gj.qq.com/">Tencent Lemon Cleaner</a> : 监控和清除垃圾,省了两个<code>app</code>的钱</p><h2 id="软件推荐"><a href="#软件推荐" class="headerlink" title="软件推荐"></a>软件推荐</h2><blockquote><p>可以用 <code>brew cask</code> 用 <code>#</code> , 付费用 <code>$</code> 表示 , 免费则没有任何符号, <code>$$</code>代表付费服务</p></blockquote><ul><li><a href="https://github.com/agalwood/Motrix">motrix</a> : 全平台的下载工具,底层用的<code>aria</code>,速度贼快</li><li><a href="https://github.com/newmarcel/KeepingYouAwake">KeepingYouAwake</a>: 很赞的一个小工具,让你的本本不被睡眠(时间可控)</li><li><a href="https://code.visualstudio.com/Download">VS Code - #</a>: 非常棒的代码编辑器</li><li><a href="https://mindnode.com/">MindNode2 - $</a>: 思维导图软件,很简洁,官方计划年末升级到5</li><li><a href="https://www.vmware.com/products/fusion/fusion-evaluation.html">VMware Fusion- $/#</a>: 非常好用的虚拟机软件</li><li><a href="https://filezilla-project.org/">FileZilla - #</a>: 开源免费好用的 FTP 软件(全平台)</li><li><a href="https://dbeaver.io/download/">DBeaver -$/#</a> : 非常实用的GUI数据库管理,支持多种数据库</li><li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox - #</a> : 开源全平台的虚拟机</li><li><a href="https://www.techsmith.com/video-editor.html">Camtasia - $</a>: 知名的屏幕录制工具,用来做视频教程妥妥的</li><li><a href="http://magnet.crowdcafe.com/">Magnet - $</a>:窗口快速排版工具</li><li><a href="https://eagle.cool/macOS">eagle - $</a>: 设计师必备,素材管理工具,很强大</li><li><a href="https://www.navicat.com/en/download/navicat-premium">Navicat permium - $</a>: 全平台的多数据库管理工具(很强大)</li><li><a href="https://www.sourcetreeapp.com/">SourceTree</a>: 全平台的 GUI git 管理客户端</li><li><a href="https://zhitu.isux.us/">智图</a> : 腾讯出品的图片压缩平台,有客户端!!</li><li><a href="https://robomongo.org/">Robo 3T</a>: MongoDB数据库的本地管理工具</li><li><a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html">微信开发者工具</a>:基于<code>nw.js</code> 的,但是只打包了 win 和 mac 端!!不解</li><li><a href="https://trello.com/">Trello - #/$$</a> : 办公协助软件,用过都说好..我单纯用来做个人列表清单规划(个人免费),有客户端</li><li><a href="https://www.drcleaner.com/dr-unarchiver/">Dr.Unarchive</a>: 解压缩软件,类似 win 上的好压,就是不知道有没有后x(appstore 有)</li><li><a href="https://www.wiz.cn/">wiznote - $$</a>:全平台的笔记软件,十多年的国产老牌..值得信赖</li><li><a href="https://calibre-ebook.com/">Calibre - #</a>: 很强大的图书管理(全平台),可以用来建立一个本地图书库</li><li>[Gifox](<a href="https://gifox.io/">https://gifox.io/</a> - $): 很喜欢这个 GIF 录制工具,小巧美观,也很便宜</li><li><a href="https://kapeli.com/dash">Dash - $$</a> : 很全面的手册汇总</li><li><a href="https://www.charlesproxy.com/">charles - $$</a> : http 的抓包分析</li></ul><p>对于<strong>PS 全家桶</strong>和<strong>ms office 全家桶</strong>这些就看人下载了.网上也有和谐的姿势(你懂的!)</p><p>像<strong>QQ,优酷,腾讯视频,有道词典,QQ音乐,网易云音乐</strong>这些,</p><p>在<code>App store</code>也有(部分应用可以直接<code>brew cask</code>),</p><p>但是啊,这里的版本可能不如他们推送的快.还有会有部分的功能限制(商店的限制比较多).</p><p>官网自家提供的有些需要用到<strong>管理员</strong>特权或者一些系统级的服务!!!</p><p><strong>macos 也可以编译安装一些软件的</strong>!!!!</p><p><strong>Q: 也有可能想说 <code>markdown</code>这些的工具呢?</strong></p><p><code>VSCode</code> 或者 <code>Atom</code>结合插件来写 markdown 我感觉已经很不错了,</p><p>可以做到各种高亮,快捷键补全,导出 PDF 等.</p><p>有人说我喜欢做事有安排!有没有清单类的应用!有挺多的,但是感觉毫无卵用.</p><p>内置的待办事项(适合当天)+邮件里面的日程安排(重复,未来,整天的行程安排)已经完美了..</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>哦,对了,有人可能也想知道 <code>Linux</code>或者 <code>unix</code> 的命令能不能直接在 <code>macos</code> 使用;</p><p>早期的 mac 是基于 bsd 搞的,所以有一定的 unix 血统…</p><p>虽有部分命令相同,但是还有一些参数上的差异.</p><p>还有一些需要额外去安装,比如 <code>wget</code>,<code>htop</code>这些</p><p>双方都有的命令(<code>mv</code>,<code>cp</code>,<code>history</code>,<code>file</code>,<code>more</code>….)这些,</p><p>功能大同小异(更多的是参数上的区别!!!)</p><p>软件不在多,够用就好…</p><p>有一些比较敏感的就不推荐了(世界那么大,你不想看看!知识怎么学习的快!)</p><p>倘若盲目的去找工具,装那么一大坨很少用或者基本不会用到.纯属浪费生命和电脑磁盘空间</p><p>软件推荐：</p><p>git-fork</p><p>命令推荐：</p><p>kafkacat</p><p>安装命令</p><p><code>brew install kafkacat</code></p><h1 id="查看过滤出来的文件"><a href="#查看过滤出来的文件" class="headerlink" title="查看过滤出来的文件"></a>查看过滤出来的文件</h1><p>$ find . -name ‘.DS_Store’</p><h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><p>$ find . -name ‘.DS_Store’ -type f -exec rm -f {} ;</p><h1 id="再次检查"><a href="#再次检查" class="headerlink" title="再次检查"></a>再次检查</h1><p>$ find . -name ‘.DS_Store’</p><p>maven 4个线程执行</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn -T 4 clean install</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;必要姿势-允许安装任何来源程序&quot;&gt;&lt;a href=&quot;#必要姿势-允许安装任何来源程序&quot; class=&quot;headerlink&quot; title=&quot;必要姿势: 允许安装任何来源程序&quot;&gt;&lt;/a&gt;必要姿势: 允许安装任何来源程序&lt;/h3&gt;&lt;p&gt;打开终端 -&amp;gt; &lt;code</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>gitlog学习</title>
+    <link href="https://diygod.me/gitlog%E5%AD%A6%E4%B9%A0/"/>
+    <id>https://diygod.me/gitlog%E5%AD%A6%E4%B9%A0/</id>
+    <published>2021-04-28T07:41:05.000Z</published>
+    <updated>2021-04-28T07:41:05.878Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://diygod.me/hello-world/"/>
+    <id>https://diygod.me/hello-world/</id>
+    <published>2021-04-28T02:50:39.949Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式</title>
+    <link href="https://diygod.me/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://diygod.me/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</id>
+    <published>2020-12-28T10:02:30.000Z</published>
+    <updated>2021-04-28T02:50:39.950Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@startmindmap</span><br><span class="line">* 设计模式</span><br><span class="line">** 面向对象</span><br><span class="line">** 工厂模式</span><br><span class="line">** 适配器模式</span><br><span class="line">@endmindmap</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>20201223</title>
+    <link href="https://diygod.me/20201223/"/>
+    <id>https://diygod.me/20201223/</id>
+    <published>2020-12-23T07:04:53.000Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    <content type="html"><![CDATA[<p><u>中台数据完成部署：</u></p><p><strong>datax-web中k8s镜像部署</strong></p><p>增量时间使用</p><p><a href="https://github.com/WeiYe-Jing/datax-web/blob/master/doc/datax-web/increment-desc.md">https://github.com/WeiYe-Jing/datax-web/blob/master/doc/datax-web/increment-desc.md</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;u&gt;中台数据完成部署：&lt;/u&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;datax-web中k8s镜像部署&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;增量时间使用&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/WeiYe-Jing/datax-web/blob/mas</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ddsdadadsdd</title>
+    <link href="https://diygod.me/ddsdadadsdd/"/>
+    <id>https://diygod.me/ddsdadadsdd/</id>
+    <published>2020-12-22T17:37:10.000Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>dadadsdd</title>
+    <link href="https://diygod.me/dadadsdd/"/>
+    <id>https://diygod.me/dadadsdd/</id>
+    <published>2020-12-22T17:37:05.000Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>dadad</title>
+    <link href="https://diygod.me/dadad/"/>
+    <id>https://diygod.me/dadad/</id>
+    <published>2020-12-22T17:37:00.000Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>dada</title>
+    <link href="https://diygod.me/dada/"/>
+    <id>https://diygod.me/dada/</id>
+    <published>2020-12-22T17:36:54.000Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>okj</title>
+    <link href="https://diygod.me/okj/"/>
+    <id>https://diygod.me/okj/</id>
+    <published>2020-12-22T17:36:48.000Z</published>
+    <updated>2021-04-28T02:50:39.949Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>post title with whitespace</title>
+    <link href="https://diygod.me/post-title-with-whitespace/"/>
+    <id>https://diygod.me/post-title-with-whitespace/</id>
+    <published>2020-12-22T13:57:09.000Z</published>
+    <updated>2021-04-28T02:50:39.950Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+</feed>

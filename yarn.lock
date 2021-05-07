@@ -651,6 +651,15 @@
   dependencies:
     "array-find-index" "^1.0.1"
 
+"cwebp-bin@^5.0.0", "cwebp-bin@^5.1.0":
+  "integrity" "sha1-1b6ofBJzWFWOe/epCm1EDULcsHQ="
+  "resolved" "https://registry.npm.taobao.org/cwebp-bin/download/cwebp-bin-5.1.0.tgz?cache=0&sync_timestamp=1590833707956&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcwebp-bin%2Fdownload%2Fcwebp-bin-5.1.0.tgz"
+  "version" "5.1.0"
+  dependencies:
+    "bin-build" "^3.0.0"
+    "bin-wrapper" "^4.0.1"
+    "logalot" "^2.1.0"
+
 "debug@*":
   "integrity" "sha1-8NIpxQXgxtjEmsVT0bE9wYP2su4="
   "resolved" "https://registry.npm.taobao.org/debug/download/debug-4.3.1.tgz?cache=0&sync_timestamp=1607566580543&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdebug%2Fdownload%2Fdebug-4.3.1.tgz"
@@ -1042,6 +1051,11 @@
     "object-assign" "^4.1.0"
 
 "file-type@^10.4.0":
+  "integrity" "sha1-KWHQnkZ1ufuaPua2npzSP0P9GJA="
+  "resolved" "https://registry.nlark.com/file-type/download/file-type-10.11.0.tgz"
+  "version" "10.11.0"
+
+"file-type@^10.5.0":
   "integrity" "sha1-KWHQnkZ1ufuaPua2npzSP0P9GJA="
   "resolved" "https://registry.nlark.com/file-type/download/file-type-10.11.0.tgz"
   "version" "10.11.0"
@@ -1746,6 +1760,15 @@
     "is-svg" "^4.2.1"
     "svgo" "^2.1.0"
 
+"imagemin-webp@^6.0.0":
+  "integrity" "sha1-uy13urgY/WEz35Z1MmSXuHfnvk0="
+  "resolved" "https://registry.npm.taobao.org/imagemin-webp/download/imagemin-webp-6.0.0.tgz"
+  "version" "6.0.0"
+  dependencies:
+    "cwebp-bin" "^5.0.0"
+    "exec-buffer" "^3.0.0"
+    "is-cwebp-readable" "^3.0.0"
+
 "imagemin@^7.0.1":
   "integrity" "sha1-9kQcpkcZdjLiPbfZcf/71TDIfb8="
   "resolved" "https://registry.nlark.com/imagemin/download/imagemin-7.0.1.tgz"
@@ -1815,6 +1838,13 @@
   "version" "2.2.0"
   dependencies:
     "has" "^1.0.3"
+
+"is-cwebp-readable@^3.0.0":
+  "integrity" "sha1-BVSqpACXei/E3jZtjAJE8TzeWMs="
+  "resolved" "https://registry.npm.taobao.org/is-cwebp-readable/download/is-cwebp-readable-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "file-type" "^10.5.0"
 
 "is-docker@^2.0.0":
   "integrity" "sha1-QSWojkTkUNOE4JBH7eca3C0UQVY="
