@@ -2677,8 +2677,6 @@
   "integrity" "sha1-c8NACvxYqCPdfu0CP44c6f2Jd/o="
   "resolved" "https://registry.npm.taobao.org/prismjs/download/prismjs-1.22.0.tgz"
   "version" "1.22.0"
-  dependencies:
-    "clipboard" "^2.0.0"
   optionalDependencies:
     "clipboard" "^2.0.0"
 
