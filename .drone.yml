@@ -11,18 +11,11 @@ steps:
   image: node:alpine3.11
   commands:
     - npm config set registry https://registry.npm.taobao.org
+    - yarn
     - cd themes/sagiri
-    - npm install
+    - yarn
     - cd ../../
-    - npm install
-    - npm install hexo-cli -g
-    - npm install hexo-server --save
-    - npm install hexo-asset-image --save
-    - npm install hexo-wordcount --save
-    - npm install hexo-generator-sitemap --save
-    - npm install hexo-generator-baidu-sitemap --save
-    - npm install hexo-deployer-git --save
-    - npm run build 
+    - hexo g
 
 - name: SCP File Transfer
   image: appleboy/drone-scp
