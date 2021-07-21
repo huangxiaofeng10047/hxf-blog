@@ -8,21 +8,14 @@ steps:
 #   commands:
 #   - git clone -b master http://192.168.50.16:1280/gitea/hexo-theme-sagiri.git themes/sagiri
 - name: Hexo Build
-  image: node:latest
+  image: node:16.4.2
   commands:
     - npm config set registry https://registry.npm.taobao.org
+    - yarn
     - cd themes/sagiri
-    - npm install
     - cd ../../
-    - npm install
-    - npm install hexo-cli -g
-    - npm install hexo-server --save
-    - npm install hexo-asset-image --save
-    - npm install hexo-wordcount --save
-    - npm install hexo-generator-sitemap --save
-    - npm install hexo-generator-baidu-sitemap --save
-    - npm install hexo-deployer-git --save
-    - npm run build 
+    - yarn
+    - hexo g
 
 - name: SCP File Transfer
   image: appleboy/drone-scp
