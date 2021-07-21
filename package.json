@@ -11,7 +11,6 @@
     "version": "5.4.0"
   },
   "dependencies": {
-    "cwebp-bin": "^5.1.0",
     "hexo": "^5.4.0",
     "hexo-all-minifier": "0.5.7",
     "hexo-deployer-git": "3.0.0",
@@ -28,7 +27,6 @@
     "hexo-renderer-swig": "^1.1.0",
     "hexo-server": "^2.0.0",
     "hexo-wordcount": "3.0.2",
-    "imagemin": "^7.0.1",
-    "imagemin-webp": "^6.0.0"
+    "yarn": "^1.22.10"
   }
 }
