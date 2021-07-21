@@ -16,7 +16,7 @@ steps:
     - cd themes/sagiri
     - cd ../../
     - yarn
-    - hexo g
+    - npm run  Build
 
 - name: SCP File Transfer
   image: appleboy/drone-scp
