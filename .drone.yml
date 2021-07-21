@@ -9,9 +9,6 @@ steps:
 #   - git clone -b master http://192.168.50.16:1280/gitea/hexo-theme-sagiri.git themes/sagiri
 - name: Hexo Build
   image: nikolaik/python-nodejs:latest
-  volumes:
-  - name: npm-cache   # npm 缓存挂载路径
-    path: /root/.npm-cache
   commands:
     - npm config set registry https://registry.npm.taobao.org
     - cd themes/sagiri
@@ -63,10 +60,6 @@ steps:
     script:
       - mv /data/mywebroot/public/* /data/mywebroot/
       - rm -rf /data/mywebroot/public/
-volumes:
-- name: npm-cache   # npm 缓存
-  host:
-    path: /tmp/cache/.npm-cache
 trigger:
   event:
   - push
