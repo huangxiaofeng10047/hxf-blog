@@ -8,7 +8,7 @@ steps:
 #   commands:
 #   - git clone -b master http://192.168.50.16:1280/gitea/hexo-theme-sagiri.git themes/sagiri
 - name: Hexo Build
-  image: nikolaik/python-nodejs:latest
+  image: node:8.6.0
   commands:
     - npm config set registry https://registry.npm.taobao.org
     - cd themes/sagiri
