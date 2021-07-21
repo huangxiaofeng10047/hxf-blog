@@ -3,21 +3,12 @@ type: docker
 name: default
 
 steps:
-# - name: themeclone
-#   image: alpine/git
-#   commands:
-#   - git clone -b master http://192.168.50.16:1280/gitea/hexo-theme-sagiri.git themes/sagiri
 - name: Hexo Build
   image: node:lts
   commands:
-    - yarn config set registry https://registry.npm.taobao.org/
     - npm config set registry https://registry.npm.taobao.org
-    - yarn
-    - cd themes/sagiri
-    - cd ../../
-    - yarn
-    - npm run  Build
-
+    - npm install
+    - npm run build
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
@@ -33,7 +24,6 @@ steps:
       from_secret: ssh_password
     command_timeout: 
       from_secret: ssh_timeout
-    # rm: true
   when:
     branch:
     - master
