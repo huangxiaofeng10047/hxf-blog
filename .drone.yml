@@ -10,6 +10,9 @@ steps:
     - npm -v
     - yarn config set registry https://registry.npm.taobao.org
     - yarn config set cache-folder .yarn-cache
+    - cd themes/sagiri
+    - yarn
+    - cd ../../
     - yarn
     - yarn run build
 - name: SCP File Transfer
