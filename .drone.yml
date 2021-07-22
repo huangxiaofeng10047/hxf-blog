@@ -3,14 +3,16 @@ type: docker
 name: default
 
 steps:
-- name: 前端构建
-  image: guoxudongdocker/node-drone
+- name: 前端主题构建
+  image:  node:13.10-alpine
   commands:
-    - npm install
     - cd themes/sagiri
     - npm install 
-    - cd ../../
-    - npm run build
+- name: 前端构建
+  image:  node:13.10-alpine
+  commands:
+    - npm install
+    - npm run build    
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
