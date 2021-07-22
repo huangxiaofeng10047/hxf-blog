@@ -3,18 +3,14 @@ type: docker
 name: default
 
 steps:
-- name: Hexo Build
-  image: node:lts
+- name: 前端构建
+  image: guoxudongdocker/node-drone
   commands:
-    - node -v
-    - npm -v
-    - yarn config set registry https://registry.npm.taobao.org
-    - yarn config set cache-folder .yarn-cache
-    - yarn
+    - npm install
     - cd themes/sagiri
-    - yarn
+    - npm install 
     - cd ../../
-    - yarn run build
+    - npm run build
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
