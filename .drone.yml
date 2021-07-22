@@ -4,14 +4,13 @@ name: default
 
 steps:
 - name: 前端主题构建
-  image:  node:13.10-alpine
+  image:  node:lts
   commands:
     - cd themes/sagiri
     - npm install 
 - name: 前端构建
-  image:  node:13.10-alpine
+  image:  node:lts
   commands:
-    - apt-get install autoconf
     - npm install
     - npm run build    
 - name: SCP File Transfer
