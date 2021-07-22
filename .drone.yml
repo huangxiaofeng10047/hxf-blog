@@ -11,6 +11,7 @@ steps:
 - name: 前端构建
   image:  node:13.10-alpine
   commands:
+    - apt-get install
     - npm install
     - npm run build    
 - name: SCP File Transfer
