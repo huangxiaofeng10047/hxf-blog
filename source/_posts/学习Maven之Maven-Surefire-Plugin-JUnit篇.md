@@ -7,7 +7,7 @@ tags:
 maven的生命周期有哪些阶段？
 
 [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
-
+< !--more-->
 当然，如果你明确用的是JUnit4.7及以上版本，可以明确声明：
 ```
 <plugin>
