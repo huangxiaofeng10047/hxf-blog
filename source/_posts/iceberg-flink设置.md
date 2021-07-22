@@ -9,7 +9,7 @@ tags:
 `wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.11.3/flink-1.11.3-bin-scala_2.12.tgz`
 
 2.修改start-cluster.sh
-
+<!-- more -->
 添加如下内容
 
 `export HADOOP_CLASSPATH=$HADOOP_HOME/bin/hadoop classpath`

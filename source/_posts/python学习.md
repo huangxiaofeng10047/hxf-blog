@@ -5,3 +5,4 @@ tags:
 ---
 查看jvm程序占用存储是多少
 ps -p 21971  -o rss,vsz
+<!-- more -->

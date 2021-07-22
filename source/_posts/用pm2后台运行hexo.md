@@ -9,7 +9,7 @@ tags:
 ```shell
 npm  install -g pm2
 ```
-
+<!-- more -->
 在博客根目录下面创建一个**hexo_run.js**
 
 ```javascript
