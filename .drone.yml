@@ -22,6 +22,7 @@ steps:
 - name: 前端构建
   image:  node:lts
   commands:
+    - npm config set cache ./.npm-cache --global 
     - npm install
     - npm run build    
 - name: SCP File Transfer
