@@ -12,6 +12,8 @@ tags:gitee typora picgo
 
 下载picgo
 
+<!--more-->
+
 下载路径：
 
 https://github.com/Molunerfinn/PicGo/releases
