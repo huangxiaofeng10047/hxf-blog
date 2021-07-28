@@ -11,7 +11,8 @@ tags: gitee typora picgo
 1.picgo安装
 
 下载picgo
-
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/20210728164457.png" width=50% />
+哇，漂亮的小姐姐(❤ ω ❤)
 <!--more-->
 
 下载路径：
