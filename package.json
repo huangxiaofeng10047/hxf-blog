@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "npx hexo server",
     "build": "npx hexo generate",
-    "deploy": "npx hexo generate && sls deploy"
+    "deploy": "npx hexo generate && sls deploy",
+     // Use npm
+     "preinstall": "npm install bin-wrapper-china -D && china-bin-env",
+     // Use yarn
+     "preinstall": "yarn add bin-wrapper-china -D && china-bin-env"
   },
   "hexo": {
     "version": "5.4.0"
@@ -30,5 +34,8 @@
     "hexo-wordcount": "3.0.2",
     "jpegtran-bin": "^5.0.2",
     "yarn": "^1.22.10"
+  },
+  "resolutions": {
+    "bin-wrapper": "npm:bin-wrapper-china"
   }
 }

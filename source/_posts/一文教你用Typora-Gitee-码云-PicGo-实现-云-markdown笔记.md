@@ -2,6 +2,8 @@
 title: 一文教你用Typora + Gitee(码云) + PicGo 实现 云 markdown笔记
 date: 2021-07-28 09:59:14
 tags: gitee typora picgo
+photos:
+  -  "https://gitee.com/hxf88/imgrepo/raw/master/img/20210728173505.jpg"
 ---
 
 ## 前言
@@ -11,7 +13,7 @@ tags: gitee typora picgo
 1.picgo安装
 
 下载picgo
-<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/20210728164457.png" width=50% />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/20210728173505.jpg" width=50% />
 哇，漂亮的小姐姐(❤ ω ❤)
 <!--more-->
 
