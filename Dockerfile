@@ -12,17 +12,12 @@ RUN apk add bash git openssh
 RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 && echo "Asia/Shanghai" > /etc/timezone \
 && apk del tzdata
-
+COPY  . /usr/blog
 # 安装hexo
-RUN \ 
-npm config set registry https://registry.npm.taobao.org \
-&&npm install \
-&&npm install hexo-cli -g \
-&& npm install hexo-server --save \
-&& npm install hexo-asset-image --save \
-&& npm install hexo-wordcount --save \
-&& npm install hexo-generator-sitemap --save \
-&& npm install hexo-generator-baidu-sitemap --save \
-&& npm install hexo-deployer-git --save
+RUN yarn \
+    && yarn global add hexo-cli \
+    && hexo g
 
-EXPOSE 4000
+FROM nginx:alpine
+COPY --from=builder  /usr/blog/public /usr/share/nginx/html
+RUN apk add --no-cache bash
