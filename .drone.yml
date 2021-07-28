@@ -24,12 +24,13 @@ steps:
   commands:
     - npm config set cache ./.npm-cache --global 
     - npm --registry https://registry.npm.taobao.org install --save jpegtran-bin
+    - npm --registry https://registry.npm.taobao.org install --save pngquant-bin
     - npm --registry https://registry.npm.taobao.org  install
     - npm run build    
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
-    target: /data/mywebroot/
+    target: /data/src/
     source: ./public
     host: 
       from_secret: ssh_host
@@ -59,8 +60,8 @@ steps:
     password:
       from_secret: ssh_password
     script:
-      - mv /data/mywebroot/public/* /data/mywebroot/
-      - rm -rf /data/mywebroot/public/
+      - mv /data/src/public/* /data/mywebroot/
+      - rm -rf /data/src/public/
 trigger:
   event:
   - push
