@@ -3,10 +3,21 @@ type: docker
 name: default
 
 steps:
+- name: restore-cache  
+  image: drillster/drone-volume-cache  
+  settings:  
+    restore: true  
+    mount:  
+      - ./.npm-cache  
+      - ./node_modules  
+  volumes:  
+    - name: cache  
+      path: /cache   
 - name: 前端主题构建
   image:  node:lts
   commands:
     - cd themes/sagiri
+    - npm config set cache ./.npm-cache --global 
     - npm install 
 - name: 前端构建
   image:  node:lts
@@ -59,3 +70,7 @@ restore-cache:
       - ./node_modules
     volumes:
       - /tmp/cache:/cache
+volumes:  
+  - name: cache  
+    host:  
+      path: /tmp/cache
