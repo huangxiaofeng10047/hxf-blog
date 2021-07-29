@@ -69,22 +69,22 @@ menu:
   首页: / || fas fa-meteor
   实验室: javascript:; || fas fa-magic
   归档: /archives/ || fas fa-archive
-  后宫: /friends/ || fas fa-mars-stroke
-  # 留言板: /message/ || fas fa-comment-dots
-  手办柜: /gk/ || fas fa-child
-  关于我: /about/ || fas fa-heartbeat
+  # 后宫: /friends/ || fas fa-mars-stroke
+  # # 留言板: /message/ || fas fa-comment-dots
+  # 手办柜: /gk/ || fas fa-child
+  # 关于我: /about/ || fas fa-heartbeat
 
 submenu:
-  实验室:
-    RSSHub: https://docs.rsshub.app/
-    RSSHub Radar: https://chrome.google.com/webstore/detail/rsshub-radar/kefjpfngnndepjbopdmoebkipbgkggaa
-    DPlayer: http://dplayer.js.org/
-    APlayer: https://aplayer.js.org/
-    NAS: https://nas.diygod.me/
-    Jellyfin: https://jellyfin.diygod.me/
-    Miniflux: https://miniflux.diygod.me/
-    Huginn: https://huginn.diygod.me/
-    监控: https://status.diygod.me/
+  # 实验室:
+  #   RSSHub: https://docs.rsshub.app/
+  #   RSSHub Radar: https://chrome.google.com/webstore/detail/rsshub-radar/kefjpfngnndepjbopdmoebkipbgkggaa
+  #   DPlayer: http://dplayer.js.org/
+  #   APlayer: https://aplayer.js.org/
+  #   NAS: https://nas.diygod.me/
+  #   Jellyfin: https://jellyfin.diygod.me/
+  #   Miniflux: https://miniflux.diygod.me/
+  #   Huginn: https://huginn.diygod.me/
+  #   监控: https://status.diygod.me/
 
 # Enable/Disable menu icons.
 menu_icons:
