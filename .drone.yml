@@ -23,7 +23,6 @@ steps:
   image:  node:lts
   commands:
     - npm config set cache ./.npm-cache --global 
-    - npm --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/mirrors/node install --save jpegtran-bin gifsicle  optipng-bin
     - npm --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/mirrors/node  install
     -  npm run build
 - name: SCP File Transfer
