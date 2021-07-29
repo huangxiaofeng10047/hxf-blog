@@ -23,9 +23,10 @@ steps:
   image:  node:lts
   commands:
     - yarn config set registry https://registry.npm.taobao.org/
+    - yarn config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
     - yarn
     -  hexo clean
-    - hexo  g
+    -  hexo  g
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
