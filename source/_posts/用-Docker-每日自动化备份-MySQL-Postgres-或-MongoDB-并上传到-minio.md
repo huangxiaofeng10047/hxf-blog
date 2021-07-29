@@ -144,3 +144,9 @@ EOF
 }
 EOF
 ```
+
+当文件上传后如下图所示：
+
+![image-20210729130727118](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210729130727118.png)
+
+![image-20210729130614955](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210729130614955.png)
