@@ -60,7 +60,7 @@ steps:
     password:
       from_secret: ssh_password
     script:
-      - rm -rf  /data/mywebroot/
+      - rm -rf  /data/mywebroot/*
       - mv /data/src/public/* /data/mywebroot/
       - rm -rf /data/src/public/
 trigger:
