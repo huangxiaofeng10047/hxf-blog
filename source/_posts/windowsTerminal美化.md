@@ -1,7 +1,7 @@
 ---
 title: windowsTerminal美化
 date: 2021-07-29 17:32:47
-tags:
+tags: windowsTerminal powershell7
 ---
 
 安装 Window Terminal 
