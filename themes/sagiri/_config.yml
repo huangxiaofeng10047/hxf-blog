@@ -339,7 +339,7 @@ han: false
 
 # Disqus
 disqus:
-  enable: true
+  enable: false
   shortname: diygod-me
   count: false
   api: https://disqus.diygod.me/api/
