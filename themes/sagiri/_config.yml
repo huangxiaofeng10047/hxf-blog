@@ -340,12 +340,12 @@ han: false
 # Disqus
 disqus:
   enable: false
-  shortname: diygod-me
-  count: false
-  api: https://disqus.diygod.me/api/
-  apikey: h403RnxQYBk2VylgLZwxodAtYOEL9bzgfhpcc8AZEU0EXn9cEWUoTwrgL3VB5tvj
-  admin: DIYgod
-  adminLabel: 妹抖
+  # shortname: diygod-me
+  # count: false
+  # api: https://disqus.diygod.me/api/
+  # apikey: h403RnxQYBk2VylgLZwxodAtYOEL9bzgfhpcc8AZEU0EXn9cEWUoTwrgL3VB5tvj
+  # admin: DIYgod
+  # adminLabel: 妹抖
 
 # Hypercomments
 #hypercomments_id:
