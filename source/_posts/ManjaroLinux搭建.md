@@ -340,3 +340,8 @@ ws.run "wsl -d Arch -u root /etc/init.wsl", vbhide
 然后在`C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`中新建快捷方式，指向刚才创建的 vbs 文件。这样下次 windows 开机时就会自动在 ArchWSL 中执行`genie -i`，然后退出，注意：`wsl --shutdown`命令会把 wsl“关机”，所以你 shutdown 之后，需要再手动运行`ArchWSL-init.vbs`。
 
 PS: 我打开.vbs 文件的时候出现了`Windows 无法访问指定设备、路径或文件。你可能没有适当的权限访问该项目。`的错误，解决方法是用[Default Programs Editor](http://defaultprogramseditor.com/)，把`.vbs`的默认程序设置为`C:\Windows\System32\wscript.exe`。
+
+引入startship
+
+[startship](https://starship.rs/guide/#%F0%9F%9A%80-installation)
+
