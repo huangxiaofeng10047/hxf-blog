@@ -1,7 +1,7 @@
 ---
 title: postgresql - 与PostgreSQL中的FOUND_ROWS()函数等效
 date: 2021-08-12 08:37:02
-tags:
+tags: postgres mysql found_rows()
 ---
 
 我正在应用程序中进行一些分页，使用PostgreSQL的标准OFFSET和LIMIT关键字一次从数据库返回20行。例如，要获得第1页:
@@ -11,13 +11,14 @@ SELECT stuff FROM table WHERE condition ORDER BY stuff OFFSET 0 LIMIT 20
 ```
 
 
+
 这也是应用程序的要求，我们还向用户显示记录总数。因此，显然，我可以通过发出一个单独的查询来获得总数:
 
 ```
 SELECT COUNT(*) FROM table WHERE condition
 ```
 
-
+<!--more-->
 但是，如果有很多行，那么这不是最佳解决方案。我注意到MySQL具有一个非常有用的函数FOUND_ROWS()，它确实可以满足我的需求:
 
 [http://dev.mysql.com/doc/refman/5.0/en/information-functions.html#function%5Ffound-rows](http://dev.mysql.com/doc/refman/5.0/en/information-functions.html#function_found-rows)
@@ -26,7 +27,7 @@ PostgreSQL中有等效的东西吗？
 
 
 
-**最佳答案**
+# 最佳答案
 
 PostgreSQL已经有[window functions](http://www.postgresql.org/docs/current/interactive/tutorial-window.html)一段时间了，它可以用来做很多事情，包括在应用LIMIT之前对行进行计数。
 
@@ -44,7 +45,7 @@ ORDER BY stuff OFFSET 40 LIMIT 20
 
 关于postgresql - 与PostgreSQL中的FOUND_ROWS()函数等效，我们在Stack Overflow上找到一个类似的问题： https://stackoverflow.com/questions/3984643/
 
-但在postgresql测试性能并没有达到很大，建议分开执行。参考原则为以下：
+# 但在postgresql测试性能并没有达到很大，建议分开执行。参考原则为以下：
 
 # Re: SQL_CALC_FOUND_ROWS equivalent in PostgreSQL
 
