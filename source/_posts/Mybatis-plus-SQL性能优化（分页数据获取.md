@@ -6,6 +6,8 @@ tags: mybatis 分页
 
 ![image-20210811134932015](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210811134932015.png)
 
+<!--more-->
+
 ## 特性
 
 - **无侵入**：只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑
