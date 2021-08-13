@@ -75,4 +75,4 @@ restore-cache:
 volumes:  
   - name: cache  
     host:  
-      path: /tmp/cache
+      path: /home/hxf/cache
