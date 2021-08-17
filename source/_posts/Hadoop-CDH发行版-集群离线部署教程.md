@@ -13,6 +13,8 @@ categories:
 2.集群内各机器间网络互通  
 3.操作者拥有集群内各机器的root权限
 
+<!--more-->
+
 > cloudera cdh分为cm(管理组件),cdh(hadoop组件)两大基础部分,当然还有,Navigator,impala等组件.  
 > cm安装方式: rpm ,存储库方式: 在线repo/内部(http)repo/本地rpm  
 > cdh安装方式: rpm/parcel ,存储库方式: 在线repo/内部(http)repo  
