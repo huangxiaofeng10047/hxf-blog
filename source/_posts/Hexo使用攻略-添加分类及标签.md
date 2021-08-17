@@ -27,7 +27,7 @@ INFO  Created: ~/Documents/blog/source/categories/index.md
 
 ![image-20210813092247207](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210813092247207.png)
 
-<!--more-->
+
 
 根据上面的路径，找到`index.md`这个文件，打开后默认内容是这样的：
 

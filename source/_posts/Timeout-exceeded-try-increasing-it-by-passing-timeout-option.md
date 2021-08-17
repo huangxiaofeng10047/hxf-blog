@@ -9,7 +9,7 @@ ci里面配置了golangci-lint检查，但是偶尔总出现level=error msg="Tim
 
 ### 解决方法
 
-<!--more-->
+
 
 在**golangci-lint**运行时，加上timeout的参数设置(默认是1分钟)
 

@@ -12,7 +12,7 @@ tags: linnux manjarco
 
 双击Manjarco.exe则进行linux的安装，需要等一会，会告诉安装成功
 
-<!--more-->
+
 
 查看安装后的命令输入
 

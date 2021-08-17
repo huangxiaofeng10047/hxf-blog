@@ -13,13 +13,6 @@ categories:
 2.集群内各机器间网络互通  
 3.操作者拥有集群内各机器的root权限
 
-<!--more-->
-
-> cloudera cdh分为cm(管理组件),cdh(hadoop组件)两大基础部分,当然还有,Navigator,impala等组件.  
-> cm安装方式: rpm ,存储库方式: 在线repo/内部(http)repo/本地rpm  
-> cdh安装方式: rpm/parcel ,存储库方式: 在线repo/内部(http)repo  
-> jdk安装方式: rpm/exec ,存储库: cloudera在线repo/cloudera内部repo/oracle tarball
-
 1.  jdk(这一步放到了脚本中) 从上面配置好的apache上下载,集群每个主机必须安装受支持的统一版本,Cloudera强烈建议安装在`/usr/java/jdk-version`目录下,这样可以自动检测到它
 
 1.挂载iso,并复制文件供http挂载(vm虚拟机上该方案有可能因inode不足而失败,提供备选方案)

@@ -17,7 +17,7 @@ categories:
 
    负向条件有`!=`、`<>`、`not in`、`not exists`、`not like`等
 
-   <!--more-->
+   
 
 2. 前导模糊查询不会命中索引
 

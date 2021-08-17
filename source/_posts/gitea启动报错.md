@@ -6,7 +6,7 @@ tags:
 
 drone gitea 启动失败
 
-<!--more-->
+
 
 lib/gitea/gitea
 ❯ cp gitea.db gitea.db.20210805

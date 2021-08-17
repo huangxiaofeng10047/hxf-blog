@@ -18,7 +18,7 @@ SELECT stuff FROM table WHERE condition ORDER BY stuff OFFSET 0 LIMIT 20
 SELECT COUNT(*) FROM table WHERE condition
 ```
 
-<!--more-->
+
 但是，如果有很多行，那么这不是最佳解决方案。我注意到MySQL具有一个非常有用的函数FOUND_ROWS()，它确实可以满足我的需求:
 
 [http://dev.mysql.com/doc/refman/5.0/en/information-functions.html#function%5Ffound-rows](http://dev.mysql.com/doc/refman/5.0/en/information-functions.html#function_found-rows)

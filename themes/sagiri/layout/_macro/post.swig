@@ -287,7 +287,9 @@
           <!--/noindex-->
         {% elif theme.auto_excerpt.enable %}
           {% set content = post.content | striptags %}
+
           {{ content.substring(0, theme.auto_excerpt.length) }}
+          
           {% if content.length > theme.auto_excerpt.length %}...{% endif %}
           <!--noindex-->
           <div class="post-button text-center">

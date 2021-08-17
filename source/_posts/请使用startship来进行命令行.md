@@ -12,7 +12,7 @@ startship ：轻量级、反应迅速，可定制的高颜值终端！
 
 ### [#](https://starship.rs/zh-CN/#快速安装)快速安装
 
-<!--more-->
+
 
 1. 安装 **starship** 二进制文件：
 

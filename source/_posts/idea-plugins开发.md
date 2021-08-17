@@ -20,7 +20,7 @@ categories:
 
 **第二步，填写项目相关的属性比如 GroupId、ArtifactId。**
 
-<!--more-->
+
 
 填写项目相关的属性
 

@@ -14,7 +14,7 @@ categories:
 
 默认情况下，子模块会将子项目放到当前工作目录下的一个与仓库同名的目录中，本例中是 repository-sub-one、repository-sub-two. 如果你想要放到其他地方，那么可以在命令结尾添加一个不同的路径。
 
-<!--more-->
+
 
 ```
 git submodule add git@gitee.com:yangzhaoyunfei/repository-sub-one.git

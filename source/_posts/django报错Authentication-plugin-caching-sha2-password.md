@@ -15,7 +15,7 @@ django.db.utils.OperationalError: (2059, "Authentication plugin 'caching_sha2_pa
 
 2.报错原因:
 
-<!--more-->
+
 
 mysql8.0提供了一种新的认证加密方式caching_sha2_password，建议需要更新到最新的connector与client。不过它还给了另一种选择，即沿用之前版本的加密方式 mysql_native_password。
 
