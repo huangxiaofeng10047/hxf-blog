@@ -65,7 +65,8 @@ wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.12.5/flink-1.12.5
 ```
  mvn  clean install -DskipTests -Pvendor-repos -Dhadoop.version=3.0.0-cdh6.0.1 -Dscala-2.11 -Drat.skip=true -T10C
 
-
+ 解释一下命令：
+ -T10C 以10个线程执行。
 ```
 
 配置修改.m2/settings.xml文件(需要注销调mirror)不然编译会报错
@@ -103,7 +104,6 @@ wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.12.5/flink-1.12.5
 
 ```shell
 git clone https://github.com/pkeropen/flink-parcel.git
-1
 ```
 
 1. cd flink-parcel
@@ -112,7 +112,7 @@ git clone https://github.com/pkeropen/flink-parcel.git
 
 ```
 #FLINK 下载地址
-FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.12.5/flink-1.12.5-bin-scala_2.12.tgz
+FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.12.5/flink-1.12.5-bin-scala_2.11.tgz
 
 #flink版本号
 FLINK_VERSION=1.12.5
@@ -138,10 +138,20 @@ CDH_MAX=6
 
 - 生成csd文件，生成文件FLINK_ON_YARN-1.12.5.jar
   a) on yarn 版本：
+
+  ```
   ./build.sh csd_on_yarn
+  
+  ```
+
   b) standalone版本：
-  ./build.sh csd_standalone
-- 
+
+  ```
+  - ./build.sh csd_standalone
+  - 
+  ```
+
+  
 
 <img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210818123414976.png" alt="image-20210818123414976" style="zoom:80%;" />
 
