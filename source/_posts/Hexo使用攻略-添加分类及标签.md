@@ -132,3 +132,8 @@ categories:
 scaffolds目录下，是新建页面的模板，执行新建命令时，是根据这里的模板页来完成的，所以可以在这里根据你自己的需求添加一些默认值。
 
 教程结束，赶紧去设置吧！
+
+参考文档
+
+[自动添加readme](https://blog.zthxxx.me/post/hexo-automatic-add-readmore/)
+
