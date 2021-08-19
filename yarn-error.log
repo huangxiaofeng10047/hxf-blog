@@ -1,0 +1,68 @@
+Arguments: 
+  /usr/bin/node /usr/sbin/yarn
+
+PATH: 
+  /home/hxf/.pyenv/bin:/home/hxf/.vscode-server/bin/379476f0e13988d90fab105c5c19e7abc8b1dea8/bin:/home/hxf/.pyenv/bin:/home/hxf/.sdkman/candidates/maven/current/bin:/home/hxf/.sdkman/candidates/java/current/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Python39/Scripts/:/mnt/c/Python39/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/TortoiseSVN/bin:/mnt/c/Users/hxf/software/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files (x86)/NetSarang/Xftp 7/:/mnt/c/software/Go/bin:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/software/powershll7/7-preview/preview:/mnt/c/software/powershll7/7/:/mnt/c/Users/hxf/scoop/apps/gsudo/current:/mnt/c/Users/hxf/scoop/apps/oh-my-posh/current/bin:/mnt/c/Users/hxf/scoop/shims:/mnt/c/Users/hxf/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/hxf/software/apache-maven-3.6.3/bin:/mnt/c/Users/hxf/AppData/Roaming/npm:/mnt/c/Users/hxf/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/software/Java/jdk1.8.0_291/jre/bin:/mnt/d/software/sublimetext3/Sublime Text x64:/mnt/c/Users/hxf/go/go/bin:/mnt/d/software/PyCharm 2021.1.3/bin:/mnt/c/Program Files/Git/usr/bin:/mnt/d/software/Java/jdk-11.0.11/bin:/mnt/c/Program Files/JetBrains/IntelliJ IDEA 2021.2/bin:/mnt/c/Users/hxf/AppData/Roaming/Typora/picgo/win64/picgo.exe:/mnt/c/software/powershll7/7-preview:/mnt/c/Program Files/JetBrains/GoLand 2021.2/bin:/mnt/d/software/flutter/bin:/mnt/c/tools/dart-sdk/bin:/mnt/c/Users/hxf/AppData/Roaming/Pub/Cache/bin:/home/hxf/.dotnet/tools:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/home/hxf/.antigen/bundles/robbyrussell/oh-my-zsh/lib:/home/hxf/.antigen/bundles/zsh-users/zsh-syntax-highlighting:/home/hxf/.antigen/bundles/zsh-users/zsh-autosuggestions:/home/hxf/.antigen/bundles/zsh-users/zsh-completions:/home/hxf/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git:/home/hxf/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/heroku:/home/hxf/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/pip:/home/hxf/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/lein:/home/hxf/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/command-not-found:/home/hxf/.antigen/bundles/spaceship-prompt/spaceship-prompt:/home/hxf/.local/bin:/home/hxf/.cargo/bin:/mnt/d/dev/flutter/bin:/home/hxf/.local/bin:/home/hxf/.cargo/bin:/mnt/d/dev/flutter/bin
+
+Yarn version: 
+  1.22.11
+
+Node version: 
+  16.6.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://github.com/gera2ld/download: tunneling socket could not be established, cause=connect ETIMEDOUT 172.22.144.1:7891
+      at ClientRequest.onError (/usr/lib/node_modules/yarn/lib/cli.js:152249:17)
+      at Object.onceWrapper (node:events:514:26)
+      at ClientRequest.emit (node:events:394:28)
+      at Socket.socketErrorListener (node:_http_client:447:9)
+      at Socket.emit (node:events:394:28)
+      at emitErrorNT (node:internal/streams/destroy:157:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:122:3)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "hexo-site",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+      "dev": "npx hexo server",
+      "build": "npx hexo generate",
+      "deploy": "npx hexo generate && sls deploy"
+    },
+    "hexo": {
+      "version": "5.4.0"
+    },
+    "dependencies": {
+      "hexo": "^5.4.0",
+      "hexo-all-minifier": "0.5.7",
+      "hexo-deployer-git": "3.0.0",
+      "hexo-fs": "3.1.0",
+      "hexo-generator-archive": "^1.0.0",
+      "hexo-generator-category": "^1.0.0",
+      "hexo-generator-feed": "3.0.0",
+      "hexo-generator-index": "^2.0.0",
+      "hexo-generator-sitemap": "2.1.0",
+      "hexo-generator-tag": "^1.0.0",
+      "hexo-renderer-ejs": "^1.0.0",
+      "hexo-renderer-marked": "^4.0.0",
+      "hexo-renderer-stylus": "^2.0.1",
+      "hexo-renderer-swig": "^1.1.0",
+      "hexo-server": "^2.0.0",
+      "hexo-wordcount": "3.0.2",
+      "yarn": "^1.22.10"
+    },
+    "resolutions": {
+      "download": "gera2ld/download#8.0.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
