@@ -290,3 +290,7 @@ flink 运行实例:
 /opt/cloudera/parcels/FLINK/lib/flink/bin/flink run -m 10.11.5.11:8081  /opt/cloudera/parcels/FLINK/lib/flink/examples/batch/WordCount.jar –input hdfs://10.11.5.11/syt/input/ –output hdfs://10.11.5.11/syt/flinkoutput
 ```
 
+参考文档：
+
+https://blog.csdn.net/benpaodexiaowoniu/article/details/115500230
+
