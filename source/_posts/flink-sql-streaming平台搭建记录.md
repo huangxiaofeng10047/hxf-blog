@@ -2,6 +2,9 @@
 title: flink-sql-streaming平台搭建记录
 date: 2021-08-19 08:54:47
 tags:
+- flink
+categories: 
+- bigdata
 ---
 
 第一步下载flink-sql-streaming代码：
@@ -121,3 +124,22 @@ GROUP BY day_time;
 查看flink集群日志，即可看到yarn上运行的flink任务：
 
 <img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210819133757431.png" alt="image-20210819133757431" style="zoom:80%;" />
+
+当dbear链接mysql报Public Key Retrieval is not allowe
+
+解决方法如下allowPublicKeyRetrieval为true即可
+
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210819135150508.png" alt="image-20210819135150508" style="zoom:80%;" />
+
+执行造数据：
+
+```java
+kafka-console-producer --broker-list cdh2:9092,cdh3:9092,cdh4:9092 --topic flink_test 
+{"day_time": "20201009","id": 7,"amnount":20}
+
+kafka-console-consumer --bootstrap-server cdh2:9092 --topic flink_test --from-beginning 
+```
+
+查看运行结果：
+
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210819142637456.png" alt="image-20210819142637456" style="zoom:80%;" />
