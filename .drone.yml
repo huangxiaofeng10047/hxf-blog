@@ -23,10 +23,9 @@ steps:
   image: node:lts
   commands:
       - npm config set cache ./.npm-cache --global 
-      - yarn config set registry https://registry.npm.taobao.org/
-      - cp .downloadrc ~/
-      - yarn add bin-wrapper-china -D && china-bin-env
-      - yarn 
+      - yarn config set registry https://registry.npm.taobao.org//
+      - npm install -g yarn fyarn --registry "https://r.cnpmjs.org/"
+      - fyarn  install
       - hexo cl
       - hexo g
 - name: SCP File Transfer
