@@ -8,7 +8,7 @@ categories:
 ---
 
 参考：https://blog.csdn.net/sinat_37690778/article/details/112533647
-
+<!--more-->
 ```
 wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.12.5/flink-1.12.5-src.tgz 
 ```
