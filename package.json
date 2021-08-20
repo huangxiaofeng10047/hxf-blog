@@ -11,7 +11,7 @@
     "version": "5.4.0"
   },
   "dependencies": {
-    "download": "^8.0.0",
+    "download": "^8.1.0",
     "hexo": "^5.4.0",
     "hexo-all-minifier": "0.5.7",
     "hexo-deployer-git": "3.0.0",
@@ -28,5 +28,8 @@
     "hexo-renderer-swig": "^1.1.0",
     "hexo-server": "^2.0.0",
     "hexo-wordcount": "3.0.2"
+  },
+  "resolutions": {
+    "download": "https://registry.npm.taobao.org/downloadex/download/downloadex-8.1.0.tgz"
   }
 }
