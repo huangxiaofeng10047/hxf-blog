@@ -11,6 +11,7 @@ tags:
 ```
 
 出现以下报错
+<!--more-->
 
 ```log
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile (default-compile) on project metastore-tools-common: Execution default-compile of goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile failed: 

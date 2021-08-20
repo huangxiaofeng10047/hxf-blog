@@ -6,6 +6,7 @@ tags: docker 备份
 
 由于备份[PostgreSQL](https://www.postgresql.org/)的指令[pg_dump](https://docs.postgresql.tw/reference/client-applications/pg_dump)需要特定版本才可以备份，故制作用[Docker](https://www.docker.com/)容器方式来自己备份，此工具支持[MySQL](https://www.mysql.com/)，PostgreSQL跟[MongoDB](https://www.mongodb.com/)，只要一个docker-compose yaml 档案就可以进行线上的备份，并且上传到minio，另外也可以设定每天晚上固定时间点进行时间备份，也就是饮食所设定的定时任务。没有使用，或者管理机房的朋友们，就可以通过这小工具，进行每天半夜线上备份，避免资料被误判。
 
+<!--more-->
 
 
 使用方式：

@@ -11,6 +11,7 @@ tags: powershell7
 ```powershell
 >> $env:path
 ```
+<!--more-->
 
 # 解决
 

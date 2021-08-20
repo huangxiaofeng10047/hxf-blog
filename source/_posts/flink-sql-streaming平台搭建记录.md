@@ -12,6 +12,7 @@ categories:
 ```shell
 git clone git@github.com:zhp8341/flink-streaming-platform-web.git
 ```
+<!--more-->
 
 第二步进行编译
 

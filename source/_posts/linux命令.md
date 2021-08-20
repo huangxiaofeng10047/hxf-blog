@@ -19,6 +19,7 @@ ps aux|head -1;ps aux|grep -v PID|sort -rn -k +4|head
 ```
 netstat -tunlp | grep 端口号
 ```
+<!--more-->
 
  
 

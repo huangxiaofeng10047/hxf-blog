@@ -32,6 +32,7 @@ PostgreSQL中有等效的东西吗？
 PostgreSQL已经有[window functions](http://www.postgresql.org/docs/current/interactive/tutorial-window.html)一段时间了，它可以用来做很多事情，包括在应用LIMIT之前对行进行计数。
 
 根据以上示例:
+<!--more-->
 
 ```
 SELECT stuff,

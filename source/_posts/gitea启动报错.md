@@ -10,6 +10,7 @@ drone gitea 启动失败
 
 lib/gitea/gitea
 ❯ cp gitea.db gitea.db.20210805
+<!--more-->
 
 lib/gitea/gitea
 ❯ sqlite3 gitea.db

@@ -7,6 +7,7 @@ tags:
 grade配置：
 
 在~/.gradle/目录下新建 init.gradle文件
+<!--more-->
 
 ```
 allprojects{

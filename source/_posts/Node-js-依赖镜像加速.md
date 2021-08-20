@@ -10,6 +10,7 @@ categories:
 ## [](https://gera2ld.space/posts/nodejs-mirror/#%E8%83%8C%E6%99%AF)背景
 
 由于一些众所周知的原因，我们在安装 Node.js 依赖的时候，速度可能会很慢。
+<!--more-->
 
 感谢国内的一些镜像服务，比如[阿里云NPM镜像](https://developer.aliyun.com/mirror/NPM)，让我们可以通过切换下载源来缩短下载时间。然而不同包的加载方式也不一样，使得整个加速过程并不是那么顺利。
 

@@ -13,7 +13,7 @@ tags:  windowsTerminal powershell7
   1.0正式版本已经发布了，不需要自行编译了。直接去Github Window Terminal下载安装即可 
 
 商店安装
-
+<!--more-->
 在微软商店里搜windows terminal，安装即可。 1、商店打不开的，自行解决，直接了当的方式就是升级系统到最新版本，重启。 2、提示当前所在的区域不支持的话 ： 登录账号的进账号把自己所在区域地址改成美国，然后把系统时间设置成美国。重启 正常情况下，你会安装成功的。 可以继续往下看了，先放一张图：
 
 ![image-20210730112728438](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210730112728438.png)我们需要安装以下模块：

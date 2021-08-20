@@ -11,6 +11,7 @@ startship ：轻量级、反应迅速，可定制的高颜值终端！
 - A [Nerd Font (opens new window)](https://www.nerdfonts.com/)installed and enabled in your terminal.
 
 ### [#](https://starship.rs/zh-CN/#快速安装)快速安装
+<!--more-->
 
 
 

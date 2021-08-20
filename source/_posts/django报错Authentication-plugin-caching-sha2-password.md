@@ -12,6 +12,7 @@ categories:
 ```
 django.db.utils.OperationalError: (2059, "Authentication plugin 'caching_sha2_password' cannot be loaded: /usr/lib64/mysql/plugin/caching_sha2_password.so: cannot open shared object file: No such file or directory")
 ```
+<!--more-->
 
 2.报错原因:
 

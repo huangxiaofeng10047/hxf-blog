@@ -11,6 +11,7 @@ tags: linnux manjarco
 ![image-20210811105044473](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210811105044473.png)
 
 双击Manjarco.exe则进行linux的安装，需要等一会，会告诉安装成功
+<!--more-->
 
 
 

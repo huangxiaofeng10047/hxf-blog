@@ -5,6 +5,7 @@ tags:
 ---
 
 nginx相关命令
+<!--more-->
 
  `nginx -s reload`
 

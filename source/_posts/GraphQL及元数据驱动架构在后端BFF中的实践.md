@@ -11,6 +11,7 @@ tags:
 > 本文介绍的实践方案已经在美团部分业务场景中落地，并取得不错效果，希望这些经验能够对大家有帮助。
 <!-- more -->
 BFF一词来自Sam Newman的一篇博文《[Pattern:Backends For Frontends](https://samnewman.io/patterns/architectural/bff/)》，指的是服务于前端的后端。BFF是解决什么问题的呢？据原文描述，随着移动互联网的兴起，原适应于桌面Web的服务端功能希望同时提供给移动App使用，而在这个过程中存在这样的问题：
+<!--more-->
 
 * 移动App和桌面Web在UI部分存在差异。
 

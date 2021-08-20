@@ -13,6 +13,7 @@ tags:
 添加如下内容
 
 `export HADOOP_CLASSPATH=$HADOOP_HOME/bin/hadoop classpath`
+<!--more-->
 
 ```
 ./bin/start-cluster.sh
