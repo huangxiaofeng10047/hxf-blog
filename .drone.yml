@@ -27,8 +27,8 @@ steps:
       - npm config set registry https://repo.huaweicloud.com/repository/npm/
       - cp .downloadrc ~/
       - yarn install
-      - hexo cl
-      - hexo g
+      - npx hexo cl
+      - npx hexo g
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
