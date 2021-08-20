@@ -27,5 +27,8 @@
     "hexo-renderer-swig": "^1.1.0",
     "hexo-server": "^2.0.0",
     "hexo-wordcount": "3.0.2"
+  },
+  "resolutions": {
+    "bin-wrapper": "npm:bin-wrapper-china"
   }
 }

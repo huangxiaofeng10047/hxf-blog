@@ -25,6 +25,7 @@ steps:
       - npm config set cache ./.npm-cache --global 
       - yarn config set registry https://registry.npm.taobao.org/
       - cp .downloadrc ~/
+      - yarn add bin-wrapper-china -D && china-bin-env
       - yarn 
       - hexo cl
       - hexo g
