@@ -112,7 +112,7 @@ scheme: Pisces
 # Value before `||` delimeter is the target permalink.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
 social:
-  GitHub: "https://github.com/hxf168482 || <i class=\"fab fa-github\" style=\"color: #191717\"><span>HXF</span></i>"
+  GitHub: "https://github.com/huangxiaofeng10047 || <i class=\"fab fa-github\" style=\"color: #191717\"><span>HXF</span></i>"
 
 social_icons:
   enable: true

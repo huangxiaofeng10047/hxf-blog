@@ -6,12 +6,12 @@
 title: Hi, HXF
 subtitle:
 description: 人气网红 | 前端萌新 | 有猫 | 开源
-author: hxf168482
+author: huangxiaofeng10047
 language: zh-Hans
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://hxf168482.me
+url: https://huangxiaofeng10047.me
 root: /
 permalink: :title/
 permalink_defaults:
@@ -85,7 +85,7 @@ theme: sagiri
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:hxf168482/hxf-blog.git
+  repo: git@github.com:huangxiaofeng10047/hxf-blog.git
   branch: master
 
 search:
