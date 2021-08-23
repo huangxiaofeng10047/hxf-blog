@@ -28,6 +28,15 @@ steps:
       - tbify yarn  install
       - npx hexo cl
       - npx hexo g
+- name: rebuild-cache
+  image: drillster/drone-volume-cache
+  rebuild: true
+  mount:  
+      - ./.npm-cache  
+      - ./node_modules  
+  volumes:
+      - /tmp/cache:/cache
+  ttl: 7
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
