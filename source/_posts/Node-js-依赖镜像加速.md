@@ -117,7 +117,7 @@ export ELECTRON_MIRROR=https://cdn.npm.taobao.org/dist/electron/
 
 {
   "resolutions": {
-    "download": "gera2ld/download#8.0.1"
+    "download": "https://registry.npm.taobao.org/downloadex/download/downloadex-8.1.0.tgz"
   }
 }
 ```
