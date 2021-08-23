@@ -35,8 +35,8 @@ steps:
       - ./.npm-cache  
       - ./node_modules  
   volumes:
-      - /tmp/cache:/cache
-  ttl: 7
+     - name: cache  
+       path: /cache   
 - name: SCP File Transfer
   image: appleboy/drone-scp
   settings:
