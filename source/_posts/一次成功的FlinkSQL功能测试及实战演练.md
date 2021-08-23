@@ -265,3 +265,129 @@ insert into print_table select * from t2;
 ![image-20210820161149697](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210820161149697.png)
 
 依然没有在t2表中删除掉该条记录，该功能需要进一步探索，以后在跟进。
+
+#### 2.3 FlinkSql-upsertKafka关于kafka中数据过期测试
+
+**2.3.1 创建10分钟策略的topic**
+
+```
+kafka-topics  --create --zookeeper cdh2:2181,cdh3:2181,cdh4:2181 --replication-factor 3 --partitions 3 --topic test01   --config log.retention.minutes=10
+kafka-console-producer  --broker-list cdh2:9092,cdh3:9092,cdh4:9092 --topic test01
+kafka-topics --delete --topic test01 --zookeeper cdh2:2181,cdh3:2181,cdh4:2181
+kafka-console-consumer  --bootstrap-server cdh2:9092,cdh3:9092,cdh4:9092 --topic output --from-beginning
+kafka-topics  --zookeeper cdh2:2181,cdh3:2181,cdh4:2181 --topic test01 --describe
+```
+
+**2.3.2 创建flinksql的表**
+
+```
+CREATE TABLE t1 (
+    name string,
+    age BIGINT,
+    isStu INT,
+    opt STRING,
+    optDate TIMESTAMP(3) METADATA FROM 'timestamp',
+    WATERMARK FOR optDate as optDate - INTERVAL '5' SECOND  -- 在ts上定义watermark，ts成为事件时间列
+) WITH (
+    'connector' = 'kafka',  -- 使用 kafka connector
+    'topic' = 'test01',  -- kafka topic
+    'scan.startup.mode' = 'earliest-offset',
+    'properties.bootstrap.servers' = 'cdh2:9092,cdh3:9092,cdh4:9092',  -- kafka broker 地址
+    'format' = 'csv'  -- 数据源格式为 csv，
+);
+CREATE TABLE t2 (
+  name STRING,
+  age bigint,
+  PRIMARY KEY (name) NOT ENFORCED
+) WITH (
+  'connector' = 'upsert-kafka',
+  'topic' = 'output',
+  'properties.bootstrap.servers' = 'cdh2:9092,cdh3:9092,cdh4:9092',  -- kafka broker 地址
+  'key.format' = 'csv',
+  'value.format' = 'csv'
+);
+INSERT INTO t2
+SELECT
+name,
+max(age)
+FROM t1
+GROUP BY name;
+ CREATE TABLE print_table (
+  name STRING,
+  age bigint,
+  PRIMARY KEY (name) NOT ENFORCED
+ ) WITH (
+  'connector' = 'print'
+ );
+insert into print_table select * from t2;
+ CREATE TABLE print_table1 (
+  name string,
+    age BIGINT,
+    isStu INT,
+    opt STRING,
+    optDate TIMESTAMP(3) 
+ ) WITH (
+  'connector' = 'print'
+ );
+insert into print_table1 select * from t1;
+
+```
+
+**2.3.3 写入数据**
+
+```
+zhangsan,18,1,insert
+lisi,20,2,update
+wangwu,30,1,delete
+```
+
+**2.3.4 等待策略过期**
+
+![image-20210820165954108](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210820165954108.png)
+
+但是t2是基于t1的汇总表，在t1被清空的情况下，t2依旧存在
+
+#### 3 FlinkSql-JDBC
+
+FlinkSql-JDBC相关资料：
+
+```
+https://ci.apache.org/projects/flink/flink-docs-release-1.12/dev/table/connectors/jdbc.html
+```
+
+###### 3.1 FlinkSql-JDBC-Mysql常规功能测试
+
+**3.1.1 mysql建表并写入数据**
+
+```sql
+create table test.test01(name varchar(10),age int, primary key (name));
+INSERT INTO test.test01(name, age)VALUES('zhangsan', 20);
+INSERT INTO test.test01(name, age)VALUES('lisi', 30);
+INSERT INTO test.test01(name, age)VALUES('wangwu', 18);
+```
+
+**3.1.2 flinkSql建表**
+
+```sql
+drop table mysqlTest ;
+create table mysqlTest (
+name string,
+age int,
+PRIMARY KEY (name) NOT ENFORCED
+) with (
+ 'connector' = 'jdbc',
+ 'url' = 'jdbc:mysql://cdh1:3306/test',
+ 'username' = 'root',
+ 'password' = 'root',
+ 'table-name' = 'test01'
+
+);
+ CREATE TABLE print_table1 (
+name string,
+age int,
+PRIMARY KEY (name)  NOT ENFORCED
+ ) WITH (
+  'connector' = 'print'
+ );
+insert into print_table1 select * from mysqlTest;
+```
