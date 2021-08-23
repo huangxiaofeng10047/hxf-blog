@@ -24,8 +24,8 @@ steps:
   commands:
       - npm config set cache ./.npm-cache --global 
       - yarn config set registry https://registry.npm.taobao.org/
-      - yarn global add tbify
-      - tbify yarn  install
+      - cp  .downloadrc ~/
+      - yarn  install
       - npx hexo cl
       - npx hexo g
 - name: rebuild-cache
