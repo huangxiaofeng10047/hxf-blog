@@ -197,3 +197,18 @@ node.max_local_storage_nodes: 100
 ![image-20210823150824337](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823150824337.png)
 
 当出现上图代表es才表示安装成功
+
+出现问题：
+
+# master not discovered yet, this node has not previously joined a bootstrapped (v7+) cluster
+
+这个是表示因为配置的节点名称不一致，造成无法让其成为主节点。
+
+解决方式：（elasticsearch.yml）
+
+```yml
+cluster.initial_master_nodes: ["BIGDATA2","BIGDATA3","BIGDATA4"]#要和下面的discovery保持一致
+node.max_local_storage_nodes: 100
+discovery.zen.ping.unicast.hosts: [BIGDATA2, BIGDATA3, BIGDATA4, localhost]#与cluster.initial_master_nodes保持一致
+```
+
