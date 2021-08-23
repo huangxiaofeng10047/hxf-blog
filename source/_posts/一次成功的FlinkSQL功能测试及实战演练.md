@@ -18,7 +18,7 @@ mysql 8.0
 impala 3.2.0-cdh6.2.0
 kafka 2.2.1-cdh6.2.0
 ```
-
+<!--more-->
 ###### 1.2 依赖关系
 
 本次测试会将FlinkSql与kafka、mysql、impala等组件进行conn，因此需要以下依赖包：
