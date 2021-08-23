@@ -150,3 +150,50 @@ http://cdh2:9200/_nodes/process?pretty
 
 ![image-20210823134950762](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823134950762.png)
 
+另外需要加入以下配置，cluster.initial_master_nodes: ["bigdata2","bigdata3","bigdata4"]注意此处，节点名称一定要和discovery中的节点一致
+
+![image-20210823151045735](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823151045735.png)
+
+否则es集群访问集群会出现：
+
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823142420941.png" alt="image-20210823142420941" style="zoom:67%;" />
+
+![image-20210823142329505](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823142329505.png)
+
+启动依然出错：
+
+```log
+org.elasticsearch.bootstrap.StartupException: java.lang.IllegalStateException: failed to obtain node locks, tried [[/var/lib/elasticsearch]] with lock id [0]; maybe these locations are not writable or multiple nodes were started without increasing [node.max_local_storage_nodes] (was [1])?
+	at org.elasticsearch.bootstrap.Elasticsearch.init(Elasticsearch.java:163) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Elasticsearch.execute(Elasticsearch.java:150) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:75) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.cli.Command.mainWithoutErrorHandling(Command.java:116) ~[elasticsearch-cli-7.14.0.jar:7.14.0]
+	at org.elasticsearch.cli.Command.main(Command.java:79) ~[elasticsearch-cli-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:115) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:81) ~[elasticsearch-7.14.0.jar:7.14.0]
+Caused by: java.lang.IllegalStateException: failed to obtain node locks, tried [[/var/lib/elasticsearch]] with lock id [0]; maybe these locations are not writable or multiple nodes were started without increasing [node.max_local_storage_nodes] (was [1])?
+	at org.elasticsearch.env.NodeEnvironment.<init>(NodeEnvironment.java:292) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.node.Node.<init>(Node.java:376) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.node.Node.<init>(Node.java:281) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Bootstrap$5.<init>(Bootstrap.java:219) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Bootstrap.setup(Bootstrap.java:219) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Bootstrap.init(Bootstrap.java:399) ~[elasticsearch-7.14.0.jar:7.14.0]
+	at org.elasticsearch.bootstrap.Elasticsearch.init(Elasticsearch.java:159) ~[elasticsearch-7.14.0.jar:7.14.0]
+	... 6 more
+```
+
+解决方式如下：
+
+在elasticsearch.yml中增加
+
+```
+node.max_local_storage_nodes: 100
+
+
+```
+
+![image-20210823143802566](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823143802566.png)
+
+![image-20210823150824337](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210823150824337.png)
+
+当出现上图代表es才表示安装成功
