@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "commitmsg": "validate-commit-msg",
+    "init": "validate-commit-msg",
     "dev": "npx hexo server",
     "build": "npx hexo generate",
     "deploy": "npx hexo generate && sls deploy"
@@ -27,7 +27,8 @@
     "hexo-renderer-stylus": "^2.0.1",
     "hexo-renderer-swig": "^1.1.0",
     "hexo-server": "^2.0.0",
-    "hexo-wordcount": "3.0.2"
+    "hexo-wordcount": "3.0.2",
+    "validate-commit-message": "^3.2.0"
   },
   "resolutions": {
     "download": "https://registry.npm.taobao.org/downloadex/download/downloadex-8.1.0.tgz"
