@@ -35,5 +35,10 @@
   "devDependencies": {
     "husky": "^7.0.1",
     "validate-commit-msg": "^2.14.0"
-  }
+  },
+  "husky": {
+      "hooks": {
+        "commit-msg": "validate-commit-msg"
+      }
+    }
 }
