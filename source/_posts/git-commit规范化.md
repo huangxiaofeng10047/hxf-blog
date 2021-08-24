@@ -119,3 +119,30 @@ yarn add validate-git-commit-msg -D
 ```
   "commitmsg": "validate-git-commit-msg"
 ```
+
+上面方式都不好使：
+
+## Installation
+
+```
+$ npm install validate-commit-message
+```
+
+## Usage
+
+You can activate the hook from the command line of your project.
+
+```
+$ node ./node_modules/.bin/validate-commit-msg
+```
+
+A more consistent way is to add a script in your `package.json`.
+
+```
+"scripts": {
+  "init": "validate-commit-msg"
+}
+```
+
+Then execute `$ npm run init`.
+
