@@ -116,4 +116,6 @@ yarn add validate-git-commit-msg -D
 
 
 
-## 
+```
+  "commitmsg": "validate-git-commit-msg"
+```

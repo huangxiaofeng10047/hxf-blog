@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+  "commitmsg": "validate-git-commit-msg",
     "dev": "npx hexo server",
     "build": "npx hexo generate",
     "deploy": "npx hexo generate && sls deploy"
@@ -10,11 +11,6 @@
   "hexo": {
     "version": "5.4.0"
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "validate-commit-msg"
-    }
-  }
     "dependencies": {
     "hexo": "^5.4.0",
     "hexo-all-minifier": "0.5.7",
