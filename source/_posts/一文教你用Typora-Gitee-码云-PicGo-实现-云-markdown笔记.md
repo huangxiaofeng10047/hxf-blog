@@ -87,7 +87,7 @@ cd C:\Users\hxf\AppData\Roaming\Typora\picgo\win64
 ```
 {
   "picBed": {
-    "current": "smms",
+    "current": "gitee",
     "gitee": {
       "repo": "hxf88/imgrepo",
       "branch": "master",
@@ -96,7 +96,7 @@ cd C:\Users\hxf\AppData\Roaming\Typora\picgo\win64
       "customPath": "yearMonth",
       "customUrl": ""
     },
-    "uploader": "smms",
+    "uploader": "gitee",
     "transformer": "path"
   },
   "picgoPlugins": {

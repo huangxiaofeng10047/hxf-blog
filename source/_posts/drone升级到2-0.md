@@ -12,7 +12,7 @@ categories:
 
 提过hexo来记录日志，不用每天构建，来一个devops(drone ci+gitea+nginx)的网站，美美的
 
-<img src="C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210824163110820.png" alt="image-20210824163110820" style="zoom:50%;" />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210824163110820.png" alt="image-20210824163110820" style="zoom:50%;" />
 
 <!--more-->
 
@@ -397,13 +397,13 @@ trigger:
 
 设置妥当后并触发构建就可以看到项目出现了构建过程，它会拉取项目代码到一个临时目录中，构建完成后该目录就会被销毁。
 
-<img src="C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210824162701085.png" alt="image-20210824162701085" style="zoom:50%;" />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210824162701085.png" alt="image-20210824162701085" style="zoom:50%;" />
 
-<img src="C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210824162728313.png" alt="image-20210824162728313" style="zoom:50%;" />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210824162728313.png" alt="image-20210824162728313" style="zoom:50%;" />
 
-<img src="C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210824162751745.png" alt="image-20210824162751745" style="zoom:50%;" />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210824162751745.png" alt="image-20210824162751745" style="zoom:50%;" />
 
-<img src="C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210824163153943.png" alt="image-20210824163153943" style="zoom:50%;" />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210824163153943.png" alt="image-20210824163153943" style="zoom:50%;" />
 
 
 
@@ -411,7 +411,7 @@ trigger:
 
 新界面还是挺好看的，撒花
 
-<img src="C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210824163226140.png" alt="image-20210824163226140" style="zoom:50%;" />
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210824163226140.png" alt="image-20210824163226140" style="zoom:50%;" />
 
 ___
 
