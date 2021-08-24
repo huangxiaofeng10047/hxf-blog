@@ -2,6 +2,9 @@
 title: GraphQL及元数据驱动架构在后端BFF中的实践
 date: 2021-05-08 11:14:25
 tags:
+- git
+categories: 
+- tools
 ---
 
  
@@ -9,11 +12,11 @@ tags:
 > GraphQL是Facebook提出的一种数据查询语言，核心特性是数据聚合和按需索取，目前被广泛应用于前后端之间，解决客户端灵活使用数据问题。本文介绍的是GraphQL的另一种实践，我们将GraphQL下沉至后端BFF（Backend For Frontend）层之下，结合元数据技术，实现数据和加工逻辑的按需查询和执行。这样不仅解决了后端BFF层灵活使用数据的问题，这些字段加工逻辑还可以直接复用，大幅度提升了研发的效率。
 >
 > 本文介绍的实践方案已经在美团部分业务场景中落地，并取得不错效果，希望这些经验能够对大家有帮助。
-<!-- more -->
-BFF一词来自Sam Newman的一篇博文《[Pattern:Backends For Frontends](https://samnewman.io/patterns/architectural/bff/)》，指的是服务于前端的后端。BFF是解决什么问题的呢？据原文描述，随着移动互联网的兴起，原适应于桌面Web的服务端功能希望同时提供给移动App使用，而在这个过程中存在这样的问题：
-<!--more-->
-
-* 移动App和桌面Web在UI部分存在差异。
+> BFF一词来自Sam Newman的一篇博文《[Pattern:Backends For Frontends](https://samnewman.io/patterns/architectural/bff/)》，指的是服务于前端的后端。BFF是解决什么问题的呢？据原文描述，随着移动互联网的兴起，原适应于桌面Web的服务端功能希望同时提供给移动App使用，而在这个过程中存在这样的问题：
+> 移动App和桌面Web在UI部分存在差异。
+>
+> > <!--more-->
+>
 
 * 移动App涉及不同的端，不仅有iOS、还有Android，这些不同端的UI之间存在差异。
 
