@@ -1,4 +1,5 @@
 ---
+
 title: git commit规范化
 date: 2021-08-24 08:36:47
 tags:
@@ -84,3 +85,28 @@ fix(request.js): 屏蔽公参中的token
 feat(购物车模块): 增加清空购物车功能
 复制代码
 ```
+
+```
+npm i husky -D
+npm i validate-commit-msg -D
+```
+
+```
+{
+  "types": ["feat", "fix", "docs", "style", "refactor", "test", "chore", "revert"],
+  "scope": {
+    "required": false,
+    "allowed": ["*"],
+    "validate": false,
+    "multiple": false
+  },
+  "warnOnFail": false,
+  "maxSubjectLength": 100,
+  "subjectPattern": ".+",
+  "subjectPatternErrorMsg": "subject does not match subject pattern!",
+  "helpMessage": "",
+  "autoFix": false
+}
+
+```
+

@@ -30,5 +30,9 @@
   },
   "resolutions": {
     "download": "https://registry.npm.taobao.org/downloadex/download/downloadex-8.1.0.tgz"
+  },
+  "devDependencies": {
+    "husky": "^7.0.1",
+    "validate-commit-msg": "^2.14.0"
   }
 }
