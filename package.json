@@ -10,7 +10,12 @@
   "hexo": {
     "version": "5.4.0"
   },
-  "dependencies": {
+  "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  }
+    "dependencies": {
     "hexo": "^5.4.0",
     "hexo-all-minifier": "0.5.7",
     "hexo-deployer-git": "3.0.0",
