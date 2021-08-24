@@ -110,3 +110,10 @@ npm i validate-commit-msg -D
 
 ```
 
+```
+yarn add validate-git-commit-msg -D
+```
+
+
+
+## 
