@@ -99,3 +99,14 @@ js_minifier:
 
 image_minifier:
   enable: false
+live2d:
+  enable: true
+  scriptFrom: local
+  model:
+    use: live2d-widget-model-wanko
+  display:
+    position: right
+    width: 150
+    height: 300
+  mobile:
+    show: true
