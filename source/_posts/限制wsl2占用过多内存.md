@@ -9,7 +9,11 @@ categories:
 
 在用户下建立
 
+![image-20210825085148884](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210825085148884.png)
+
 .wslconfig
+
+<!--more-->
 
 ```
 [wsl2]
