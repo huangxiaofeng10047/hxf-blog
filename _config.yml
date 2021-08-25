@@ -109,7 +109,7 @@ live2d:
   debug: false
   model:
     scale: 1
-    use: live2d-widget-model-wanko
+    use: live2d-widget-model-mikoto
   display:
     superSample: 2 # 超采样等级
     width: 100 
