@@ -108,15 +108,20 @@ live2d:
   tagMode: false
   debug: false
   model:
+    hHeadPos: 0.5
+    vHeadPos: 0.61
     scale: 1
     use: live2d-widget-model-mikoto
   display:
     superSample: 2 # 超采样等级
-    width: 100 
-    height: 100
+    width: 150 
+    height: 300
     position: left # 位置
+    hOffset: 0
+    vOffset: -20
   mobile:
-    show: false
+    show: true
+    scale: 0.5
   react:
     opacityDefault: 0.9 # 默认透明度
     opacityOnHover: 0.5 # 鼠标移上透明度
