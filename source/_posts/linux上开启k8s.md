@@ -2,11 +2,28 @@
 title: linux上开启k8s
 date: 2021-08-26 10:46:14
 tags:
+- k8s
+- linux
+categories: 
+- devops
 ---
 
 linuxrunning k8s locally
 
 <!--more-->
+
+安装cfssl
+
+```
+wget http://***/cfssl/cfssl_linux-amd64 --no-check-certificate
+wget http://***/cfssl/cfssljson_linux-amd64 --no-check-certificate
+wget http://***/cfssl/cfssl-certinfo_linux-amd64 --no-check-certificate
+chmod +x cfssl*
+sudo mkdir -p /opt/kubernetes/bin
+sudo mv cfssl-certinfo_linux-amd64 /opt/kubernetes/bin/cfssl-certinfo
+sudo mv cfssljson_linux-amd64 /opt/kubernetes/bin/cfssljson
+sudo mv cfssl_linux-amd64 /opt/kubernetes/bin/cfssl
+```
 
 [https://github.com/kubernetes/community/blob/master/contributors/devel/running-locally.mdhttps://github.com/kubernetes/community/blob/master/contributors/devel/running-locally.md](https://github.com/kubernetes/community/blob/master/contributors/devel/running-locally.mdhttps://github.com/kubernetes/community/blob/master/contributors/devel/running-locally.md)
 
@@ -26,7 +43,11 @@ cd kubernetes
 
 报错：hostname not found
 
-需要安装inettools包
+需要安装inetutils 包
+
+```
+sudo pacman -S inetutils 
+```
 
 Since root access is sometimes needed to start/stop Kubernetes daemons, `./hack/local-up-cluster.sh` may need to be run as root. If it reports failures, try this instead:
 
