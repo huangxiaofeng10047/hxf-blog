@@ -241,3 +241,4 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 这个时候也可以把该目录下所有文件修改成 777 保证可以访问。
 
 ![image-20210827103941099](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210827103941099.png)
+

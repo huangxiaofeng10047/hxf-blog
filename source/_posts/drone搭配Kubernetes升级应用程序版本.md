@@ -2,7 +2,15 @@
 title: drone搭配Kubernetes升级应用程序版本
 date: 2021-08-27 10:55:02
 tags:
+- k8s
+- drone
+categories: 
+- devops
 ---
+使用kind 安装k8s服务：
+dronci-》k8s 升级k8s应用
+
+<--more-->
 
 ```yml
 apiVersion: v1
@@ -213,4 +221,16 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZ
     eyJhbGciOiJSUzI1NiIsImtpZCI6IlQxNU5ydkJ1TFppYVUzS0FTSEhYcU9PQXAyN0NNRExQbktVeXFRcXpIYzAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRyb25lLWRlcGxveS10b2tlbi03eHYydCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkcm9uZS1kZXBsb3kiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJiMTJlMjA0Mi0yOTE2LTQ4ZTQtOGQ0MC1jYmQ1YzM5ODVkNjAiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVtbzpkcm9uZS1kZXBsb3kifQ.j6Rs5pvnPAQAgdbzRAR66pq5qtC0SadOm-t-zk8ne1eWEih0fqz4ECXufOVJM-i1WtnIKhgIh2qA8-vi5g24SdQg_stGuaKiw2zd2-wUzD5lpjaSpIRi34P6kgxe6QXzeS60OcT3UBw09Jm6EKp5m7KlEI_TXLie0kxD0NTwCqCJT81DBDW1LhPA0ASdxYFfpAtf8GWuOagnKxNiXLKlYm853mlU77EtNnFCUblVyEXAMRdKMAvw10E-DWtO8p0ImE4OwslXgmn7mqThTx48GiYWQtRvixSTETGa68mnAslCQGqZpvdylhNFIzolzdthyDNqclBzR0dwtzypkKFtKQ
   ```
 
+  遇到问题：
   
+  ![image-20210827153318109](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210827153318109.png)
+  
+  Error from server (Forbidden): deployments.apps "k8s-node-demo" is forbidden: User "system:serviceaccount:demo:drone-deploy" cannot get resource "deployments" in API group "apps" in the namespace "demo" 
+
+rabc错误：
+
+```yaml
+kubectl create clusterrolebinding serviceaccounts-cluster-admin \
+  --clusterrole=cluster-admin \
+  --group=system:serviceaccounts
+```
