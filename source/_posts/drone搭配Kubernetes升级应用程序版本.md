@@ -229,8 +229,19 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZ
 
 rabc错误：
 
+WARNING: This allows any user with read access to secrets or the ability to create a pod to access super-user credentials.
+
 ```yaml
 kubectl create clusterrolebinding serviceaccounts-cluster-admin \
   --clusterrole=cluster-admin \
   --group=system:serviceaccounts
 ```
+
+解决：
+
+![image-20210827153904379](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210827153904379.png)
+
+上面这种方式太暴力，正常应用赋予他权限，参看下面文档：
+
+[rabc]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#service-account-permissions
+
