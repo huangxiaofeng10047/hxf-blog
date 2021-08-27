@@ -1,4 +1,6 @@
 ---
+
+
 title: ManjaroLinux搭建
 date: 2021-08-11 10:23:02
 tags: linnux manjarco
@@ -346,3 +348,31 @@ PS: 我打开.vbs 文件的时候出现了`Windows 无法访问指定设备、�
 
 [startship](https://starship.rs/guide/#%F0%9F%9A%80-installation)
 
+连接图形界面：
+
+1. 在 windows 上安装 [VcXsrv](https://sourceforge.net/projects/vcxsrv/)
+2. 首先找到软件的安装路径，比如 C:\Program Files\VcXsrv，然后对两个可执行文件 vcxsrv.exe 和 xlaunch.exe 进行操作：右键点击可执行文件 –> 属性 –> 兼容性 – > 更改高 DPI 设置 –> 勾选替代高 DPI 缩放行为。*如果不做这一步，VcXsrv 的显示效果会不够清晰*
+3. 打开软件。Display settings 选择左下的第三个（我通常都选左上的第一个），Display number 输入 23789(前文提到过，如果这个端口被占用了就换一个)，然后下一步，下一步
+4. 在 Extra settings 界面，下方的 Additional parameters for VcXsrv 里填写`-screen 0 1280x720+100+100`以设置窗口大小和位置
+5. 如果使用的是 WSL 2，那么还需要勾选 Disable access control，然后下一步
+6. 你可以 Save configuration 保存配置文件，这样将来就可以双击配置文件直接启动或者开机时自启
+   1. 按 win+R 键打开运行窗口，输入`shell:startup`，回车，会打开一个文件夹
+   2. 将配置文件或者它的快捷方式复制进该文件夹，这样开机时就会自启已经配置好的 VcXsrv
+7. 点击完成，这时看到的是黑色的窗口，因为我们还没启动 ArchWSL 的桌面。
+
+打开 wsl，运行如下命令以启动桌面：
+
+```
+startxfce4
+
+```
+
+```
+sudo pacman -S --needed xfce4 mousepad parole ristretto thunar-archive-plugin thunar-media-tags-plugin xfce4-battery-plugin xfce4-datetime-plugin xfce4-mount-plugin xfce4-netload-plugin xfce4-notifyd xfce4-pulseaudio-plugin xfce4-screensaver xfce4-taskmanager xfce4-wavelan-plugin xfce4-weather-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin file-roller network-manager-applet leafpad epdfview galculator lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings capitaine-cursors arc-gtk-theme xdg-user-dirs-gtk
+```
+
+```
+sudo pacman -S --needed xorg
+```
+
+ 

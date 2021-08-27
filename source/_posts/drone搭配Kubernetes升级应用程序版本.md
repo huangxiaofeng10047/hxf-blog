@@ -1,0 +1,103 @@
+---
+title: drone搭配Kubernetes升级应用程序版本
+date: 2021-08-27 10:55:02
+tags:
+---
+
+```yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drone-deploy
+  namespace: demo
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: drone-deploy
+  namespace: demo
+rules:
+  - apiGroups: ["extensions"]
+    resources: ["deployments"]
+    verbs: ["get","list","patch","update"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drone-deploy
+  namespace: demo
+subjects:
+  - kind: ServiceAccount
+    name: drone-deploy
+    namespace: demo
+roleRef:
+  kind: Role
+  name: drone-deploy
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-node-demo
+  namespace: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+        app: k8s-node-demo
+  template:
+    metadata:
+      labels:
+        app: k8s-node-demo
+    spec:
+      containers:
+      - image: appleboy/k8s-node-demo
+        name: k8s-node-demo
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-node-demo
+  namespace: demo
+  labels:
+    app: k8s-node-demo
+spec:
+  selector:
+    app: k8s-node-demo
+  # if your cluster supports it, uncomment the following to automatically create
+  # an external load-balanced IP for the frontend service.
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+```
+
+
+
+
+kubectl -n demo get serviceAccounts/drone-deploy -o yaml
