@@ -1,4 +1,5 @@
 ---
+
 title: drone搭配Kubernetes升级应用程序版本
 date: 2021-08-27 10:55:02
 tags:
@@ -10,7 +11,7 @@ categories:
 使用kind 安装k8s服务：
 dronci-》k8s 升级k8s应用
 
-<--more-->
+<!--more-->
 
 ```yml
 apiVersion: v1
@@ -163,6 +164,12 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ijcyd1BKU3p6SzRBWEdYUUk0SHRJUE9uMU80LVdPUUhxZEthSUQt
 
 放弃这种方式了，还是通过kind创建：
 
+kind create cluster --name multi-node --config=kind-config.yml
+
+ kubectl -n demo get serviceAccounts/drone-deploy -o yaml
+kind-config.yml文件如下：
+需要注意的是指定了apiServer的地址，让远程服务可以访问
+
 ```
  kubectl -n demo get serviceAccounts/drone-deploy -o yaml
  kind: ServiceAccount
@@ -190,13 +197,8 @@ $ echo ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklreDNSMnBSTWpCcFNrdG1iVXhXWW5wS1NYc
 eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZMzhrM0EifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRyb25lLWRlcGxveS10b2tlbi13bGx4cCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkcm9uZS1kZXBsb3kiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJkOTI1ZDY3Zi03N2EyLTQ3NjktOGVlZi03NTYwMTJhZjMzYzYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVtbzpkcm9uZS1kZXBsb3kifQ.GsNd3pwpD2LVM_tcZ6NawR2uH6ox5ule_peEhRqumq5JOqg38KDnnqq4NVnDZWSXdpSofoOfmsx27xTZQ5BeF6fa0GKB7eOFes3tW8KV69nrpt8ncWWoaQQUDAmJ5COsbxSOmQvbtFAmLuAgypt-zaAJAOMzQYieWeUjtIoKCPd6PakEn7KWiYvPtTozlcqN8BYfEMBGUXaCxXxv_GxUleOSjF5JzIiVq9B2iw-6QnPLOQ4mWdz2epfq-LsOrb6oyrllyakvSVlZdwtKYFqtu-AnNmc93JWKGZDGVhnf-5hNta7NeBTswiDq4bex6lKPBlTy-4-VQ7Typ8ggxzG0fA
 ```
 
-- ```
-  kind create cluster --name multi-node --config=kind-config.yml
+- ```yml
   
-  
-   kubectl -n demo get serviceAccounts/drone-deploy -o yaml
-  kind-config.yml文件如下：
-  需要注意的是指定了apiServer的地址，让远程服务可以访问
   apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -215,8 +217,10 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZ
     secret/drone-deploy-token-7xv2t \
     -o yaml | egrep 'ca.crt:|token:'
   ```
+  
+  
 
-```
+```yml
 # this config file contains all config fields with comments
 # NOTE: this is not a particularly useful config file
 kind: Cluster
@@ -254,6 +258,8 @@ nodes:
 - role: worker
 - role: worker
 ```
+
+
 
 
   ```
