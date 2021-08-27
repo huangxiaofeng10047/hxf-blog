@@ -191,10 +191,12 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZ
 ```
 
 - ```
-  kind create cluster --name multi-node --config=kind-config.yaml
+  kind create cluster --name multi-node --config=kind-config.yml
+  
   
    kubectl -n demo get serviceAccounts/drone-deploy -o yaml
-  
+  kind-config.yml文件如下：
+  需要注意的是指定了apiServer的地址，让远程服务可以访问
   apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -214,6 +216,46 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZ
     -o yaml | egrep 'ca.crt:|token:'
   ```
 
+```
+# this config file contains all config fields with comments
+# NOTE: this is not a particularly useful config file
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  # WARNING: It is _strongly_ recommended that you keep this the default
+  # (127.0.0.1) for security reasons. However it is possible to change this.
+  apiServerAddress: "192.168.50.16"
+  # By default the API server listens on a random open port.
+  # You may choose a specific port but probably don't need to in most cases.
+  # Using a random port makes it easier to spin up multiple clusters.
+  apiServerPort: 6443
+# patch the generated kubeadm config with some extra settings
+kubeadmConfigPatches:
+- |
+  apiVersion: kubelet.config.k8s.io/v1beta1
+  kind: KubeletConfiguration
+  evictionHard:
+    nodefs.available: "0%"
+# patch it further using a JSON 6902 patch
+kubeadmConfigPatchesJSON6902:
+- group: kubeadm.k8s.io
+  version: v1beta2
+  kind: ClusterConfiguration
+  patch: |
+    - op: add
+      path: /apiServer/certSANs/-
+      value: my-hostname
+# 1 control plane node and 3 workers
+nodes:
+# the control plane node config
+- role: control-plane
+# the three workers
+- role: worker
+- role: worker
+- role: worker
+```
+
+
   ```
     ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1EZ3lOekEyTlRVeU5Gb1hEVE14TURneU5UQTJOVFV5TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUdtCk9mWldqcUhWaG9qTU1CSmlFYlpVQ0IyRU5oUjg1bUovOXBGbUdNLzA1Mkk4TmZSYnE4NEVRdUNrWER5U1Yxak0KQXVNOVIyUmlHNCs0a2VNM0ZPQWZ3bWpuOUpmUVpmeENSSUhiaExpcWZKVTNVTDZEM1hMUlIyajRRc3hUQUcwVwppOUVHSE8rMmV2TDNkRkFjUlNUZGFzbldybEk5RnBmN3l6cjlHU3gvWDNhc3pJNGthNjFPRUFOSHhhM2hPU2FRCmordW8rVzZIWDljWGRKTXlpZ2FxZldhNDRiK2xzbWRUQVBpakZJV1lWYTVyc3hyRnY2Qm1XMUROMEV2cEYvNDIKMVpRV1pBYVc3MFhMK1YyTVRIcUZFRmhvbzJDbzArbDM4b0dzZGpReFE3TFYwL3NPZ01zRFJnOEJDU0xtUzNsVQpCYlk4MjdHUThHR2VRTWlHYnhNQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZHdjh3cnF5dlE4Yk5sa3FacWVKeEhvN01jbGhNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFDMG9TR3hHVmNNNjFkUGdZdXlOMk5qdm80MW8zSDM5aFhIQVZyUHZZZUZrUks3ZlYzSApoZXUrYm5mbUlJK3V3ek0yaTNEY3JyRWRIWlV2RUtlelU5ZTBKKzc2UDQ3Y2hsSnZ1RHFpcmpmTWxYOWZuRllCClhaVEdnc0ZVbmY4M3lHSjBlbDVOaHNVM0JicHEwcUtOZ24xMkpCUXM5d0ZmaTNIaE9SSE85OUc5Zk4vSGR5cjEKV0JYbmpFYzNPc1pKZzVxZmR1RGZqWFlibkY0cGVjdnFpRjF6eU9kWmFhcUdza1hRWnIwOWVaaDU4aWdsUStxSwpRU0xGWDZYRnZNY1FrMEc3Vmg2c2FCemViTzJjY083cGtBMG9HVFQ2UHhoYVBZWEJFQzJrd050aDl0VGJiN3MrCnR3YUx6L0dBQ0N2dGh2YzdiWFFvNTA4U1VycjNTUjdCR0ZZRAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
     token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklsUXhOVTV5ZGtKMVRGcHBZVlV6UzBGVFNFaFljVTlQUVhBeU4wTk5SRXhRYmt0VmVYRlJjWHBJWXpBaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMDNlSFl5ZENJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSmlNVEpsTWpBME1pMHlPVEUyTFRRNFpUUXRPR1EwTUMxalltUTFZek01T0RWa05qQWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuajZSczVwdm5QQVFBZ2RielJBUjY2cHE1cXRDMFNhZE9tLXQtems4bmUxZVdFaWgwZnF6NEVDWHVmT1ZKTS1pMVd0bklLaGdJaDJxQTgtdmk1ZzI0U2RRZ19zdEd1YUtpdzJ6ZDItd1V6RDVscGphU3BJUmkzNFA2a2d4ZTZRWHplUzYwT2NUM1VCdzA5Sm02RUtwNW03S2xFSV9UWExpZTBreEQwTlR3Q3FDSlQ4MURCRFcxTGhQQTBBU2R4WUZmcEF0ZjhHV3VPYWduS3hOaVhMS2xZbTg1M21sVTc3RXRObkZDVWJsVnlFWEFNUmRLTUF2dzEwRS1EV3RPOHAwSW1FNE93c2xYZ21uN21xVGhUeDQ4R2lZV1F0UnZpeFNURVRHYTY4bW5Bc2xDUUdxWnB2ZHlsaE5GSXpvbHpkdGh5RE5xY2xCelIwZHd0enlwa0tGdEtR
@@ -222,9 +264,9 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZ
   ```
 
   遇到问题：
-  
+
   ![image-20210827153318109](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210827153318109.png)
-  
+
   Error from server (Forbidden): deployments.apps "k8s-node-demo" is forbidden: User "system:serviceaccount:demo:drone-deploy" cannot get resource "deployments" in API group "apps" in the namespace "demo" 
 
 rabc错误：
