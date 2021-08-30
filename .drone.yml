@@ -70,8 +70,8 @@ steps:
     password:
       from_secret: ssh_password
     script:
-      - rm -rf  /home/hxf/nginx/html/*
-      - mv /data/src/public/* /home/hxf/nginx/html/
+      - rm -rf  /home/hxf/nginx-blog/html/*
+      - mv /data/src/public/* /home/hxf/nginx-blog/html/
       - rm -rf /data/src/public/
 trigger:
   event:
