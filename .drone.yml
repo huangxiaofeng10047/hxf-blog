@@ -87,4 +87,4 @@ restore-cache:
 volumes:  
   - name: cache  
     host:  
-      path: /mnt/d/linuxdata/blog/node_cache_yarn
+      path: /home/hxf/cache
