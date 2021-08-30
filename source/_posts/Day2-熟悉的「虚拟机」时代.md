@@ -2,6 +2,9 @@
 title: Day2 熟悉的「虚拟机」时代
 date: 2021-08-27 17:17:15
 tags:
+- devops
+categories: 
+- devops
 ---
 
 ### **早期尚未有微服务概念时，你可能看过以下的机器架构**
