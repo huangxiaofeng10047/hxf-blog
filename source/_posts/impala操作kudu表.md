@@ -4,7 +4,7 @@ date: 2021-08-30 11:36:20itags:
 - impala
 - kudu
 categories: 
-- bigdatampala
+- bigdata
 ---
 
 1.通过impala操作kudu表
@@ -108,16 +108,108 @@ public class CreateTable {
 
 使用impala创建外部表 ， 将kudu的表映射到impala上：
 
+shell命令为：
+
 [![复制代码](https://gitee.com/hxf88/imgrepo/raw/master/img/copycode.gif)](javascript:void(0);)
 
 ```
 CREATE EXTERNAL TABLE my_mapping_table
 STORED AS KUDU
 TBLPROPERTIES (
-  'kudu.master_addresses' = 'hadoop01:7051,hadoop02:7051,hadoop03:7051', 
+  'kudu.master_addresses' = 'cdh2:7051,cdh3:7051,cdh4:7051', 
   'kudu.table_name' = 'PERSON'
 );
 ```
 
 [![复制代码](https://gitee.com/hxf88/imgrepo/raw/master/img/copycode.gif)](javascript:void(0);)
+
+### 将数据插入 Kudu 表
+
+**impala** 允许使用标准 **SQL** 语句将数据插入 **Kudu**
+
+ 
+
+#### 插入单个值
+
+创建表：
+
+
+
+```
+CREATE TABLE my_first_table
+(
+  id BIGINT,
+  name STRING,
+  PRIMARY KEY(id)
+)
+PARTITION BY HASH PARTITIONS 16
+STORED AS KUDU;
+```
+
+当输出
+
+ERROR: AnalysisException: Table property 'kudu.master_addresses' is required when the impalad startup flag -kudu_master_hosts is not used.
+
+证明kudu的参数没有插入到impala中，进入cdh中，进入impala，选择impla的服务范围，选择impala，如下图所示，重启即可。
+
+![image-20210830171847100](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210830171847100.png)
+
+此示例插入单个行:
+
+```
+INSERT INTO my_first_table VALUES (99, "sarah");
+```
+
+![image-20210830171931455](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210830171931455.png)
+
+查看数据:
+
+```
+select * from my_first_table
+```
+
+![image-20210830172007549](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210830172007549.png)
+
+此示例使用单个语句插入三行:
+
+```
+INSERT INTO my_first_table VALUES (1, "john"), (2, "jane"), (3, "jim");
+```
+
+![image-20210830172107492](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210830172107492.png)
+
+这样看是快一些了。
+
+#### 批量插入Batch Insert
+
+从 **Impala** 和 **Kudu** 的角度来看，通常表现最好的方法通常是使用 **Impala** 中的 **SELECT FROM** 语句导入数据
+
+ 
+
+```
+INSERT INTO my_kudu_table
+  SELECT * FROM legacy_data_import_table;
+```
+
+### 更新行
+
+#### 单行更新
+
+执行更新操作：
+
+```
+UPDATE my_first_table SET name="bob" where id = 3;
+```
+
+#### 批量更新
+
+```
+UPDATE my_first_table SET name="bob" where id > 2;
+```
+
+### 删除行
+
+```
+DELETE FROM my_first_table WHERE id < 3;
+```
 
