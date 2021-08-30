@@ -11,6 +11,8 @@ categories:
 
 hdfsOperator类读取hdfs操作
 
+<!--more-->
+
 ![image-20210830095130000](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210830095130000.png)
 
 其中core-site.xml和hdfs-site.xml必须
