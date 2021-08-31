@@ -1,6 +1,7 @@
 ---
 title: impala操作kudu表
-date: 2021-08-30 11:36:20itags:
+date: 2021-08-30 11:36:20
+tags:
 - impala
 - kudu
 categories: 
