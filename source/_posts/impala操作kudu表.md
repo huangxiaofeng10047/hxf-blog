@@ -31,7 +31,13 @@ TBLPROPERTIES (
 );
 ```
 
-在impala-shell中输入上面的命令：当看到如下命令时，则表示创建表格成功。
+在
+
+```
+impala-shell
+```
+
+中输入上面的命令：当看到如下命令时，则表示创建表格成功。
 
 ![image-20210830114537950](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210830114537950.png)
 
