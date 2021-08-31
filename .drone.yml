@@ -70,7 +70,7 @@ steps:
       - rm -rf  /home/hxf/nginx-blog/html/*
       - mv /data/src/public/* /home/hxf/nginx-blog/html/
       - rm -rf /data/src/public/
-    when:
+  when:
       event:
           - tag
 restore-cache:
