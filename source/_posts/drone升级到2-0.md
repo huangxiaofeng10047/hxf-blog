@@ -462,3 +462,5 @@ drone repo update \
   --auto-cancel-pushes=true \
     gitea/hxf-blog
 ```
+
+加油
