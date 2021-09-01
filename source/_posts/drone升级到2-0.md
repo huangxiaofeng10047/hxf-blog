@@ -452,3 +452,13 @@ git clone git@github.com:drone/drone-cli.git
  ~/go/bin/drone repo update  --auto-cancel-running=true gitea/hxf-blog
 ```
 
+```bash
+# 啟用 pull request
+drone repo update \
+  --auto-cancel-pull-requests=true 
+  gitea/hxf-blog
+# 啟用 push event
+drone repo update \
+  --auto-cancel-pushes=true \
+    gitea/hxf-blog
+```
