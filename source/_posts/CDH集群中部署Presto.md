@@ -119,3 +119,24 @@ Found parcel PRESTO-0.147.presto0.1-el7.parcel
 ![image-20210831103014728](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210831103014728.png)
 
 当看到el7即可。
+
+
+
+POINT_VERSION=5 VALIDATOR_DIR=/mnt/d/workspace/github/cloudera/cm_ext OS_VER=el7 PARCEL_NAME=presto ./build-parcel.sh /mnt/c/Users/hxf/Downloads/presto-server-0.230.tar.gz
+
+ VALIDATOR_DIR=/mnt/d/workspace/github/cloudera/cm_ext CSD_NAME=presto ./build-csd.sh
+
+![image-20210831114209754](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210831114209754.png)
+
+![image-20210831114223557](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210831114223557.png)
+
+![image-20210831134018731](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210831134018731.png)
+
+![image-20210831135137170](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210831135137170.png)
+
+### FAQ
+
+**添加服务找不到es服务**
+
+> 访问 http://localhost:7180/cmf/csd/list 查看csd安装是否故障
+

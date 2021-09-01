@@ -52,9 +52,6 @@ steps:
       from_secret: ssh_password
     command_timeout: 
       from_secret: ssh_timeout
-  when:
-    event:
-      - tag
 - name: Web Deploy
   image: appleboy/drone-ssh
   settings:
@@ -70,9 +67,6 @@ steps:
       - rm -rf  /home/hxf/nginx-blog/html/*
       - mv /data/src/public/* /home/hxf/nginx-blog/html/
       - rm -rf /data/src/public/
-  when:
-      event:
-          - tag
 restore-cache:
     image: drillster/drone-volume-cache
     restore: true
