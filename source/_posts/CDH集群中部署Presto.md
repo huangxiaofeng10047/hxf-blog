@@ -152,3 +152,13 @@ POINT_VERSION=5 VALIDATOR_DIR=/mnt/d/workspace/github/cloudera/cm_ext OS_VER=el7
 
 看到worker即可。
 
+配置presto与hive链接，通过presto可以查看hive数据库：
+
+![image-20210901092736002](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901092736002.png)
+
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901092818931.png" alt="image-20210901092818931" style="zoom:150%;" />
+
+可以看到user表，通过hive命令对比一下：
+
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901092903459.png" alt="image-20210901092903459" style="zoom:150%;" />
+
