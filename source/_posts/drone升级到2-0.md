@@ -443,3 +443,9 @@ ___
     <img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901125031070.png" alt="image-20210901125031070" style="zoom:150%;" />
 
  ~/go/bin/drone repo update  --auto-cancel-running=true gitea/hxf-blog
+
+git clone git@github.com:drone/drone-cli.git
+
+ go install ./...
+
+ ~/go/bin/drone repo update  --auto-cancel-running=true gitea/hxf-blog
