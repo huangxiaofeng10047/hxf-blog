@@ -439,4 +439,6 @@ ___
 -   其他
     
     docker 相关文章很多，暂时没有在项目中遇到什么这方面的坑，待记录。
+    
+    <img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901125031070.png" alt="image-20210901125031070" style="zoom:150%;" />
 
