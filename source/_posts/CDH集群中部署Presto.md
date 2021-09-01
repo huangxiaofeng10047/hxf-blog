@@ -140,3 +140,15 @@ POINT_VERSION=5 VALIDATOR_DIR=/mnt/d/workspace/github/cloudera/cm_ext OS_VER=el7
 
 > 访问 http://localhost:7180/cmf/csd/list 查看csd安装是否故障
 
+注意presto配置：
+
+![image-20210901090317921](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901090317921.png)
+
+这个服务为coordinator的地址，基于这个发现地址，work和coordinator才能彼此发现。
+
+查看presto界面：Coordinator WebUI
+
+![image-20210901090434633](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210901090434633.png)
+
+看到worker即可。
+
