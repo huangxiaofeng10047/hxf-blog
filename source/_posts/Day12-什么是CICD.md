@@ -6,7 +6,11 @@ tags:
 categories: 
 - devops
 ---
-那么何谓`DevOps``CICD``CICD``CICD`
+身为 DevOps 人员具有 CICD 概念是在基本应有的的，但倘若开发人员也了解 CICD 概念，更能有效降低错误发生，並提升服务品质。那么何为 CICD。
+
+那么何为 CICD ，其实讲的比较一点就是将上程式的流程自动化，自动 build code、执行 unit test、自动更新线上服务...所有重复步骤都转为自动化执行。
+
+但实际上 CI 与 CD 应该要拆成两个部分來看，下图是较为常见的CICD 流程，开发人员执行 git push 至 Gitlab 后，将程式更新至 Server 的步骤交由 Jenkins 负责。
 
 那么何谓`CICD`
 <!--more-->
