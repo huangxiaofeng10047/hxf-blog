@@ -8,7 +8,6 @@ steps:
   settings:  
     restore: true  
     mount:  
-      - ./.npm-cache  
       - ./node_modules  
   volumes:  
     - name: cache  
@@ -84,7 +83,6 @@ restore-cache:
     image: drillster/drone-volume-cache
     restore: true
     mount:
-      - ./.yarn-cache
       - ./node_modules
     volumes:
       - /tmp/cache:/cache
