@@ -73,5 +73,40 @@ windows terminal 也支持分屏，分屏的快捷键为：
 
 [https://blog.tcs-y.com/2021/05/24/windows-powershell-beautify/](https://blog.tcs-y.com/2021/05/24/windows-powershell-beautify/)
 
-​             
+## 删除丑陋的xxx@hostname
+
+ subl  ~/jandedobbeleer.omp.json      
+
+修改对应的theme中
+
+```
+{
+  "type": "session",
+  "style": "diamond",
+  "foreground": "#ffffff",
+  "background": "#c386f1",
+  "leading_diamond": "\uE0B6",
+  "trailing_diamond": "\uE0B0",
+  "properties": {
+    "display_default": false  ##这个很重要，通过来让hostname显示
+  }
+}
+```
+
+notepad $PROFILE
+
+
+
+1. In my powershell profile, I set the new environment variable to my own username: 
+2. `$env:POSH_SESSION_DEFAULT_USER = [System.Environment]::UserName`
+
+<img src="https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210902170000719.png" alt="image-20210902170000719" style="zoom:150%;" />
+
+即可。
+
+看效果：
+
+![image-20210902170027584](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210902170027584.png)
+
+完美！！！！
 

@@ -3,6 +3,7 @@ title: django报错Authentication plugin 'caching_sha2_password)
 date: 2021-08-17 11:58:28
 tags:
 - python
+- mysql
 categories: 
 - tools
 ---
