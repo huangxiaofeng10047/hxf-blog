@@ -1,11 +1,11 @@
 ---
 title: Day11 Harbor 不让你的imge 暴露在外
-date: 2021-09-02 08:28:35!tags:
+date: 2021-09-02 08:28:35
+tags:
 - devops
 categories: 
-- devops[](https://i.imgur.com/IAguMb8.png)
+- devops
 ---
-
 今天要来介绍一个Docker 私有库工具Harbor，Harbor 是由VMWare 公司用Go 语言所开发的开源软体，用于除存团队私有的image，Harbor 提供了简易的UI 介面，包含权限控管，及跨机器的自动同步功能，且安装容易。
 
 **上述提及Harbor 提供权限控管的功能，以下介绍Harbor 区分哪些权限：**

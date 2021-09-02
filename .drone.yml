@@ -67,6 +67,19 @@ steps:
       - rm -rf  /home/hxf/nginx-blog/html/*
       - mv /data/src/public/* /home/hxf/nginx-blog/html/
       - rm -rf /data/src/public/
+- name: 钉钉通知
+  image: lddsb/drone-dingtalk-message
+  settings:
+      token:
+        from_secret: dingding
+      secret: 
+        from_secret: dingding_sec
+      type: markdown
+      message_color: true
+      message_pic: true
+      sha_link: true
+  when:
+      status: [failure, success]            
 restore-cache:
     image: drillster/drone-volume-cache
     restore: true
