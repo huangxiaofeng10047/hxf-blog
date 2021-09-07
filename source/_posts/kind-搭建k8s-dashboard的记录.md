@@ -108,3 +108,68 @@ https://192.168.50.16:3004/#/workloads?namespace=default
 
 ![image-20210907092526649](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210907092526649.png)
 
+$ kubectl create -f role.yaml
+$ kubectl create -f role-bind.yaml
+
+接下来该怎么做？和前面一样的，我们只需要拿到cnych这个ServiceAccount的token就可以登录Dashboard了：
+
+```shell
+➜ kubectl get secret -n kube-system |grep cnych
+cnych-token-8w76h                                kubernetes.io/service-account-token   3      2m28s
+
+kind-k8s/opt/nginx-ingress
+➜ kubectl get secret cnych-token-8w76h -o jsonpath={.data.token} -n kube-syste
+m |base64 -d
+eyJhbGciOiJSUzI1NiIsImtpZCI6ImRfREZOWDlTaFp4alZ2bUF2ZUtkR0J4azVyalQ5VFZONXR6N3p3eGRTSmsifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbnljaC10b2tlbi04dzc2aCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbnljaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6Ijg0NjFiYTM1LTZmZTMtNDQ0Mi1hODU4LTE2YjBkNzgyM2FjOCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTpjbnljaCJ9.bWJhpGhhXZGODPaF9nRuY7HLdEAy3FBkYRpKDXi9gWS92Z0YhfazLWM2YO1flEJ1oMcRwKz5QMBLoUbpM9FoTpxF6CWyfoIRMUBaJW-ktmReyJQ9PDufqr03ulSahjwSMw85oOi9-WThiv0RQgQVmRUMBgpRadPlemO_cAt-u-UmBnXS50waBq48VNbSbwbbxgmI7cixcrRV74jN7aMg1ra9Xt15gzCdjxFu-FBMHNUuUVAOVX5s_D7iwL4P6qFqcNSg0DWC9VlGasrwZgx-9h7Bij4KF81NauRTMT2xkxwxIme7K-0HcLGtcWxoh6QrSYbuIGSirDpsVbqksR1Cqw
+```
+
+# kubernetes 登陆为空解决办法
+
+ 原创
+
+创建一个群集管理服务帐户
+在此步骤中，我们将为仪表板创建服务帐户并获取其凭据。
+
+运行以下命令：
+
+此命令将在默认名称空间中为仪表板创建服务帐户
+
+```html
+kubectl create serviceaccount dashboard -n default
+
+1.2.
+```
+
+将集群绑定规则添加到您的仪表板帐户
+
+```html
+kubectl create clusterrolebinding dashboard-admin -n default  --clusterrole=cluster-admin  --serviceaccount=default:dashboard
+
+1.2.
+```
+
+使用以下命令复制仪表板登录所需的令牌：
+
+```html
+kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
+
+1.2.
+```
+
+复制令牌，然后通过选择令牌选项将其粘贴到仪表板登录页面中
+
+![image-20210907095803327](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210907095803327.png)
+
+❯ kubectl get node
+NAME                       STATUS   ROLES                  AGE   VERSION
+multi-node-control-plane   Ready    control-plane,master   75m   v1.21.1
+multi-node-worker          Ready    <none>                 74m   v1.21.1
+
+kind-k8s/opt/nginx-ingress
+➜ kubectl label nodes multi-node-worker ingress-ready=true
+node/multi-node-worker labeled
+
+kind-k8s/opt/nginx-ingress
+➜ kubectl label nodes multi-node-control-plane ingress-ready=true
+node/multi-node-control-plane labeled
+
