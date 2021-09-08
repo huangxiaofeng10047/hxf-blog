@@ -63,7 +63,7 @@ steps:
     password:
       from_secret: ssh_password
     script:
-      - rm -rf  /rootf/nginx-blog/html/*
+      - rm -rf  /root/nginx-blog/html/*
       - mv /data/src/public/* /root/nginx-blog/html/
       - rm -rf /data/src/public/
 - name: 钉钉通知
