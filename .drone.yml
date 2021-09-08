@@ -63,8 +63,8 @@ steps:
     password:
       from_secret: ssh_password
     script:
-      - rm -rf  /home/hxf/nginx-blog/html/*
-      - mv /data/src/public/* /home/hxf/nginx-blog/html/
+      - rm -rf  /rootf/nginx-blog/html/*
+      - mv /data/src/public/* /root/nginx-blog/html/
       - rm -rf /data/src/public/
 - name: 钉钉通知
   image: lddsb/drone-dingtalk-message
