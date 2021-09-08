@@ -146,9 +146,9 @@ steps:
     image: plugins/docker                           
     settings:
       username:                                     
-        from_secret: docker_username
+        from_secret: docker_username #注意一定要是docker_username
       password:                                     
-        from_secret: docker_password
+        from_secret: docker_password #注意一定要是docker_password
       repo: <harbor url> /library/golang-hello      
       tags: latest                                   
       registry: <harbor url>                        
