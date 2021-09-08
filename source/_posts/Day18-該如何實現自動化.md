@@ -2,9 +2,9 @@
 title: Day18 該如何實現自動化
 date: 2021-09-08 11:50:52
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 從第十一天到第十七天的內容，一路完成了「建置 Harbor」、「建置 GitLab」、「建置 Drone」、「Drone 範例操作」，那麼該試著使用 `Drone` 在實際的環境中將重複的事情自動化，嘗試想著以下情境：

@@ -2,9 +2,9 @@
 title: Day27 了解 K8S 的 Namespace & Labels
 date: 2021-09-08 14:00:07
 tags:
- - devops
-categories:
- - devops
+- devops
+categories: 
+- devops
 ---
 
 今天要介紹好用的分類用法`Namespace`與 `Label`，試著想像一個情境，當你有100個服務且有三個不同環境(`DEV`、`QA`、`PROD`)，為了節省成本你將 `QA` 與 `DEV` 的服務放在相同的 `K8S Cluster`，那麼你至少就會有 `200` 個服務在`K8S Cluster`上，這麼多的服務該怎麼管理，今天第一個介紹的管理方式 `Namespace` 。

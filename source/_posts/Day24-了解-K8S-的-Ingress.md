@@ -2,9 +2,9 @@
 title: Day24 了解 K8S 的 Ingress
 date: 2021-09-08 13:40:13
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 ### 什麼是 `Ingress`?

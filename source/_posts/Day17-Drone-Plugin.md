@@ -2,9 +2,9 @@
 title: Day17 Drone Plugin
 date: 2021-09-08 11:02:54
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 > [Bash 建置 plugin 參考文件](https://docs.drone.io/plugins/tutorials/bash/)

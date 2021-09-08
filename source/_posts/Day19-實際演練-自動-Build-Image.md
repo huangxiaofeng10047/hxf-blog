@@ -2,9 +2,9 @@
 title: Day19 實際演練 - 自動 Build Image
 date: 2021-09-08 11:56:00
 tags:
- - devops
-categories:
- - devops
+- devops
+categories: 
+- devops
 ---
 
 首先我們要先準備一份 `code`(以 golang 示範) 跟一份 `Dockerfile` 檔案，稍後將由 `Drone` 自動將程式 `build` 成 `Image`

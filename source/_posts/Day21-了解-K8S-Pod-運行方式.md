@@ -2,9 +2,9 @@
 title: Day21 了解 K8S & Pod 運行方式
 date: 2021-09-08 13:26:46
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 ## 你需要知道的基本概念

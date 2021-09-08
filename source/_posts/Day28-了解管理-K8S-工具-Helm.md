@@ -2,9 +2,9 @@
 title: Day28 了解管理 K8S 工具 Helm
 date: 2021-09-08 14:01:49
 tags:
- - devops
-categories:
- - devops
+- devops
+categories: 
+- devops
 ---
 
 ![](https://i.imgur.com/ZBrSjD8.png)

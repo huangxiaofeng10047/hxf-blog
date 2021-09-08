@@ -2,9 +2,9 @@
 title: Day25 了解 K8S 的 ConfigMap & Secret
 date: 2021-09-08 13:51:58
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 「敏感資料」、「設定檔」...每次更改設定檔都需要重新包成映像檔，覺得很麻煩嗎?那麼你該了解一下 `Config` 與 `Secret` 的用法了，學會這個用法可以省去許多麻煩，甚至可以僅更改外層資料便能夠影響容器內的世界，接下來就來看看什麼是 `ConfigMap` 與 `Secret` 吧!

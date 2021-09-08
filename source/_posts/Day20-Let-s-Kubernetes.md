@@ -2,9 +2,9 @@
 title: Day20 Let's Kubernetes
 date: 2021-09-08 13:20:45
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 > docker container 變多惹，好難管理....  

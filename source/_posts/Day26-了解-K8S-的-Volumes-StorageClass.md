@@ -2,9 +2,9 @@
 title: Day26 了解 K8S 的 Volumes & StorageClass
 date: 2021-09-08 13:57:15
 tags:
- - devops
-categories:
- - devops
+- devops
+categories: 
+- devops
 ---
 
 `Container` 的硬碟空間是短暫的，隨著 `Container` 生命一同消失，那麼重要的資料該如何保存? 今天會說明 `Volumes` 與 `Storage Class` 是什麼，以及該如何使用

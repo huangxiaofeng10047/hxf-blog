@@ -2,9 +2,9 @@
 title: Day23 了解 K8S 的 Deployment
 date: 2021-09-08 13:37:21
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 昨天提到了 `Deployment` 與 `Pod` 之間的差異，今天再來仔細的說一下什麼是 `Deployment` 元件，`Deployment` 可以算是 `Kubernetes` 中最常用到的元件之一，`Deployment` 跟 `Pod` 相同但卻更強大，通常在建立新的 `Deployment` 時，會同時建立 `ReplicaSet` ， 接著 `ReplicaSet` 會在建立 `Pod`，在建立的過程中 `Deployment` 會一併檢查是否能正常啟動，例如：「image 是否存在」、「yaml 檔案規則是否正確」

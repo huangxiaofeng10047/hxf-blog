@@ -2,9 +2,9 @@
 title: Day22 了解 K8S 的 Service
 date: 2021-09-08 13:34:55
 tags:
-  - devops
-categories:
-  - devops
+- devops
+categories: 
+- devops
 ---
 
 好的~那麼先說說昨天應該要說的 `Service`，`Service` 是負責扮演對外溝通的腳色，每次建立時都會提供一組IP並對應到指定的 `Port`，另外 `Service` 本身提供了四種類型，分別是:

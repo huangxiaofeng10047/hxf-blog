@@ -2,9 +2,9 @@
 title: Day15 使用 Docker 快速建置 Drone
 date: 2021-09-08 10:57:14
 tags:
-  - devops
+- devops
 categories: 
-  - devops
+- devops
 ---
 
 > 1.於本機環境示範  

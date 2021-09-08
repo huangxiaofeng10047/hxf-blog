@@ -2,9 +2,9 @@
 title: Day29 Drone 結合 Kubernetes
 date: 2021-09-08 14:04:59
 tags:
- -devops
-categories:
- - devops
+- devops
+categories: 
+- devops
 ---
 
 在 [第18天](https://ithelp.ithome.com.tw/articles/10223275) 介紹過該如何透過 `Drone` 自動 `Build Image` 並推上 `Harbor` 私有庫，那麼今天介紹該如何透過`Drone` 更新線上環境的 `Image` 版本號。
