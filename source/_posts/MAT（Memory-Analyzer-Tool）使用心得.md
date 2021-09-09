@@ -24,7 +24,7 @@ categories:
     
 3.  打开后，直接选择leak suspects选项（该选项表示MAT会自动帮我们分析内存泄漏最可能的类），分析完后类比下图
     
-    ![image-20210909135053469](C:\Users\hxf\AppData\Roaming\Typora\typora-user-images\image-20210909135053469.png)
+    ![image-20210909135053469](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210909135053469.png)
     
     一般来说，该报告会告诉我们最可能泄露的类和相关实例，我们点进打开后，对Retained Heap最大的实例再点击选择outGoing references（当前对象，引用的外部对象），即可查看该实例中引用了哪些对象，一直没释放，从而导致该实例占了不少内存
     
