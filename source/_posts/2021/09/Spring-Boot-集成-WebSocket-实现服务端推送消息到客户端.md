@@ -166,7 +166,7 @@ public class WebSocketServer {
 
 接下来再打开一个网页，服务地址中输入`ws://127.0.0.1:8080/websocket/huxy`，点击`开启连接`按钮，然后回到第一次打开的网页在消息框中输入`{"toUserId":"huxy","message":"i love you"}`，点击`发送到服务端`，第二个网页中会收到服务端推送的消息`{"fromUserId":"wupx","message":"i love you","toUserId":"huxy"}`。
 
-![](https://img-blog.csdnimg.cn/20200630233352667.png)
+![image-20210914171440307](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210914171440307.png)
 
 同样，项目的日志中也会有相应的日志：
 
