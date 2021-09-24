@@ -2,6 +2,10 @@
 title: IntelliJ IDEA vmoptions 设置
 date: 2021-09-17 15:36:33
 tags:
+- java
+- idea
+categories: 
+- java
 ---
 
 IntelliJ IDEA 运行在 JVM 上，JVM 有很多的选项和开关配置可以用来调整性能，也就是说，可以通过手动的调整这些 JVM 参数来优化 IntelliJ IDEA 的性能。这篇文章主要是总结一下我的学习过程。
