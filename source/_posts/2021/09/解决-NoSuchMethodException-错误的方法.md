@@ -2,6 +2,9 @@
 title: 解决 NoSuchMethodException 错误的方法
 date: 2021-09-17 15:40:08
 tags:
+- jvm
+categories: 
+- jvm
 ---
 
 在使用 Java Instrumentation API 的时候，因为在应用启动的时候加载了一个 Java Agent，然后在 Java Agent 中依赖的包，和应用内依赖的包产生了冲突，同时使用了 commons.lang3 这个包，但是依赖的版本不一致。导致使用 FieldUtils 的时候出现了 `NoSuchMethodError`:

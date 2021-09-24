@@ -99,3 +99,29 @@ Azul出品必属精品，ZGC所采用的算法就是Azul Systems很多年前提�
 
 ![image-20210924152449020](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210924152449020.png)
 
+2
+
+
+
+Just a recent feedback
+
+Many proposals to solve this issue have to do with the vm launcher option `--illegal-access`.
+
+According to Oracle, with [JEP 403 (link1)](https://openjdk.java.net/jeps/403) and [JEP 403 (link2)](https://bugs.openjdk.java.net/browse/JDK-8263547) which has been decided to be **delivered from JDK 17 and onwards** , the launcher option `--illegal-access` will stop working!
+
+> Summary Strongly encapsulate all internal elements of the JDK, except for critical internal APIs such as sun.misc.Unsafe. It will no longer be possible to relax the strong encapsulation of internal elements via a single command-line option, as was possible in JDK 9 through JDK 16.
+
+And
+
+> With this change, it **will no longer be possible for end users to use the --illegal-access option** to enable access to internal elements of the JDK. (A list of the packages affected is available here.) The sun.misc and sun.reflect packages will still be exported by the jdk.unsupported module, and will still be open so that code can access their non-public elements via reflection. No other JDK packages will be open in this way.
+>
+> It will still be possible to use the **--add-opens** command-line option, or the Add-Opens JAR-file manifest attribute, to open specific packages.
+
+So the following solution will keep working
+
+```java
+# --add-opens has the following syntax: {A}/{package}={B}
+java --add-opens java.base/java.lang=ALL-UNNAMED
+```
+
+But the solution with `--illegal-access` will stop working from `JDK 17` and onwards.
