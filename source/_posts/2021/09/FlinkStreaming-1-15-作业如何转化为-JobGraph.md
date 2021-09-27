@@ -362,11 +362,16 @@ StreamGraph 转换为 JobGraph 的处理过程主要是在 `setChaining()` 中�
 ```
 //org.apache.flink.streaming.api.graph.StreamGraph
 //note: 未指定 partitioner 的话，会为其选择 forward（并发设置相同时） 或 rebalance（并发设置不同时）
-if (partitioner == null && upstreamNode.getParallelism() == downstreamNode.getParallelism()) {
-    partitioner = new ForwardPartitioner<Object>();
-} else if (partitioner == null) {
-    partitioner = new RebalancePartitioner<Object>();
-}
+        // If no partitioner was specified and the parallelism of upstream and downstream
+            // operator matches use forward partitioning, use rebalance otherwise.
+            if (partitioner == null
+                    && upstreamNode.getParallelism() == downstreamNode.getParallelism()) {
+                    //forward
+                partitioner = new ForwardPartitioner<Object>();
+            } else if (partitioner == null) {
+            //reblance
+                partitioner = new RebalancePartitioner<Object>();
+            }
 ```
 
 #### 创建 JobVertex 节点
@@ -378,84 +383,79 @@ JobVertex 对象的创建是在 `createJobVertex()` 方法中实现的，这个�
 `connect()` 方法在执行的时候，它会遍历 `transitiveOutEdges` 中的 StreamEdge，也就是这个 ChainNode 的 out StreamEdge（这些 StreamEdge 是不能与前面的 ChainNode Chain 在一起）
 
 ```
-// org.apache.flink.streaming.api.graph.StreamGraphGenerator
+// org.apache.flink.streaming.api.graph.StreamingJobGraphGenerator
 private void connect(Integer headOfChain, StreamEdge edge) {
 
-    //note: 记录 StreamEdge，这个主要是 chain 之间的边
-    physicalEdgesInOrder.add(edge);
+        physicalEdgesInOrder.add(edge);
 
-    Integer downStreamvertexID = edge.getTargetId();
+        Integer downStreamVertexID = edge.getTargetId();
 
-    //note: 这里 headVertex 指的是 headOfChain 对应的 JobVertex（也是当前 node 对应的 vertex）
-    JobVertex headVertex = jobVertices.get(headOfChain);
-    JobVertex downStreamVertex = jobVertices.get(downStreamvertexID);
+        JobVertex headVertex = jobVertices.get(headOfChain);
+        JobVertex downStreamVertex = jobVertices.get(downStreamVertexID);
 
-    StreamConfig downStreamConfig = new StreamConfig(downStreamVertex.getConfiguration());
+        StreamConfig downStreamConfig = new StreamConfig(downStreamVertex.getConfiguration());
 
-    //note: 这个节点的输入数增加 1
-    downStreamConfig.setNumberOfInputs(downStreamConfig.getNumberOfInputs() + 1);
+        downStreamConfig.setNumberOfNetworkInputs(downStreamConfig.getNumberOfNetworkInputs() + 1);
 
-    StreamPartitioner<?> partitioner = edge.getPartitioner();
+        StreamPartitioner<?> partitioner = edge.getPartitioner();
 
-    ResultPartitionType resultPartitionType;
-    switch (edge.getShuffleMode()) {
-        case PIPELINED:
-            resultPartitionType = ResultPartitionType.PIPELINED_BOUNDED;
-            break;
-        case BATCH:
-            resultPartitionType = ResultPartitionType.BLOCKING;
-            break;
-        case UNDEFINED:
-            resultPartitionType = streamGraph.isBlockingConnectionsBetweenChains() ?
-                    ResultPartitionType.BLOCKING : ResultPartitionType.PIPELINED_BOUNDED;
-            break;
-        default:
-            throw new UnsupportedOperationException("Data exchange mode " +
-                edge.getShuffleMode() + " is not supported yet.");
+        ResultPartitionType resultPartitionType;
+        switch (edge.getExchangeMode()) {
+            case PIPELINED:
+                resultPartitionType = ResultPartitionType.PIPELINED_BOUNDED;
+                break;
+            case BATCH:
+                resultPartitionType = ResultPartitionType.BLOCKING;
+                break;
+            case UNDEFINED:
+                resultPartitionType = determineResultPartitionType(partitioner);
+                break;
+            default:
+                throw new UnsupportedOperationException(
+                        "Data exchange mode " + edge.getExchangeMode() + " is not supported yet.");
+        }
+
+        checkAndResetBufferTimeout(resultPartitionType, edge);
+
+        JobEdge jobEdge;
+        if (partitioner.isPointwise()) {
+            jobEdge =
+                    downStreamVertex.connectNewDataSetAsInput(
+                            headVertex, DistributionPattern.POINTWISE, resultPartitionType);
+        } else {
+            jobEdge =
+                    downStreamVertex.connectNewDataSetAsInput(
+                            headVertex, DistributionPattern.ALL_TO_ALL, resultPartitionType);
+        }
+        // set strategy name so that web interface can show it.
+        jobEdge.setShipStrategyName(partitioner.toString());
+        jobEdge.setDownstreamSubtaskStateMapper(partitioner.getDownstreamSubtaskStateMapper());
+        jobEdge.setUpstreamSubtaskStateMapper(partitioner.getUpstreamSubtaskStateMapper());
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(
+                    "CONNECTED: {} - {} -> {}",
+                    partitioner.getClass().getSimpleName(),
+                    headOfChain,
+                    downStreamVertexID);
+        }
     }
-
-    //note: 创建 JobEdge（它会连接上下游的 node）
-    JobEdge jobEdge;
-    if (partitioner instanceof ForwardPartitioner || partitioner instanceof RescalePartitioner) {
-        jobEdge = downStreamVertex.connectNewDataSetAsInput( //note: 这个方法会创建 IntermediateDataSet 对象
-            headVertex,
-            DistributionPattern.POINTWISE, //note: 上游与下游的消费模式，（每个生产任务的 sub-task 会连接到消费任务的一个或多个 sub-task）
-            resultPartitionType);
-    } else {
-        jobEdge = downStreamVertex.connectNewDataSetAsInput(
-                headVertex,
-                DistributionPattern.ALL_TO_ALL, //note: 每个生产任务的 sub-task 都会连接到每个消费任务的 sub-task
-                resultPartitionType);
-    }
-    // set strategy name so that web interface can show it.
-    //note: 设置 partitioner
-    jobEdge.setShipStrategyName(partitioner.toString());
-
-    if (LOG.isDebugEnabled()) {
-        LOG.debug("CONNECTED: {} - {} -> {}", partitioner.getClass().getSimpleName(),
-                headOfChain, downStreamvertexID);
-    }
-}
 ```
 
 真正创建 JobEdge 和 IntermediateDataSet 对象是在 JobVertex 中的 `connectNewDataSetAsInput()` 方法中，在这里也会把 JobVertex、JobEdge、IntermediateDataSet 三者连接起来（JobGraph 的 graph 就是这样构建的）：
 
 ```
 //org.apache.flink.runtime.jobgraph.JobVertex
-public JobEdge connectNewDataSetAsInput(
-        JobVertex input,
-        DistributionPattern distPattern,
-        ResultPartitionType partitionType) {
+    public JobEdge connectNewDataSetAsInput(
+            JobVertex input, DistributionPattern distPattern, ResultPartitionType partitionType) {
 
-    //note: 连接 Vertex 的中间数据集
-    IntermediateDataSet dataSet = input.createAndAddResultDataSet(partitionType);
+        IntermediateDataSet dataSet = input.createAndAddResultDataSet(partitionType);
 
-    //note: 创建对应的 edge
-    JobEdge edge = new JobEdge(dataSet, this, distPattern);
-    this.inputs.add(edge);
-    dataSet.addConsumer(edge);
-    return edge;
-}
+        JobEdge edge = new JobEdge(dataSet, this, distPattern);
+        this.inputs.add(edge);
+        dataSet.addConsumer(edge);
+        return edge;
+    }
 ```
 
 到这里，`createChain()` 方法就执行完了，在 JobGraph 总共会涉及到三个对象：JobVertex、JobEdge 和 IntermediateDataSet，最后生成的 JobGraph 大概下面这个样子：
@@ -477,141 +477,122 @@ public JobEdge connectNewDataSetAsInput(
 // org.apache.flink.streaming.api.graph.StreamGraphGenerator
 //note: 主要是 checkpoint 相关的配置
 private void configureCheckpointing() {
-    CheckpointConfig cfg = streamGraph.getCheckpointConfig();
+        CheckpointConfig cfg = streamGraph.getCheckpointConfig();
 
-    long interval = cfg.getCheckpointInterval();
-    if (interval < MINIMAL_CHECKPOINT_TIME) {
-        // interval of max value means disable periodic checkpoint
-        interval = Long.MAX_VALUE;
-    }
-
-    //  --- configure the participating vertices ---
-
-    //note: 配置 checkpoint 中要参与的 vertices 节点信息
-    // collect the vertices that receive "trigger checkpoint" messages.
-    // currently, these are all the sources
-    //note: 记录接收 trigger checkpoint msg 的 vertices，当前都是 source 的情况
-    List<JobVertexID> triggerVertices = new ArrayList<>();
-
-    // collect the vertices that need to acknowledge the checkpoint
-    // currently, these are all vertices
-    //note: 记录当前需要向 checkpoint coordinator 发送 ack 的 vertices，当前指的是所有的 vertices
-    List<JobVertexID> ackVertices = new ArrayList<>(jobVertices.size());
-
-    // collect the vertices that receive "commit checkpoint" messages
-    // currently, these are all vertices
-    //note: 记录接收 'commit checkpoint' 的 vertices，当前也指的是所有 vertices
-    List<JobVertexID> commitVertices = new ArrayList<>(jobVertices.size());
-
-    for (JobVertex vertex : jobVertices.values()) {
-        if (vertex.isInputVertex()) {
-            triggerVertices.add(vertex.getID());
+        long interval = cfg.getCheckpointInterval();
+        if (interval < MINIMAL_CHECKPOINT_TIME) {
+            // interval of max value means disable periodic checkpoint
+            interval = Long.MAX_VALUE;
         }
-        commitVertices.add(vertex.getID());
-        ackVertices.add(vertex.getID());
-    }
 
-    //  --- configure options ---
+        //  --- configure options ---
 
-    CheckpointRetentionPolicy retentionAfterTermination;
-    if (cfg.isExternalizedCheckpointsEnabled()) {
-        CheckpointConfig.ExternalizedCheckpointCleanup cleanup = cfg.getExternalizedCheckpointCleanup();
-        // Sanity check
-        if (cleanup == null) {
-            throw new IllegalStateException("Externalized checkpoints enabled, but no cleanup mode configured.");
+        CheckpointRetentionPolicy retentionAfterTermination;
+        if (cfg.isExternalizedCheckpointsEnabled()) {
+            CheckpointConfig.ExternalizedCheckpointCleanup cleanup =
+                    cfg.getExternalizedCheckpointCleanup();
+            // Sanity check
+            if (cleanup == null) {
+                throw new IllegalStateException(
+                        "Externalized checkpoints enabled, but no cleanup mode configured.");
+            }
+            retentionAfterTermination =
+                    cleanup.deleteOnCancellation()
+                            ? CheckpointRetentionPolicy.RETAIN_ON_FAILURE
+                            : CheckpointRetentionPolicy.RETAIN_ON_CANCELLATION;
+        } else {
+            retentionAfterTermination = CheckpointRetentionPolicy.NEVER_RETAIN_AFTER_TERMINATION;
         }
-        retentionAfterTermination = cleanup.deleteOnCancellation() ?
-                CheckpointRetentionPolicy.RETAIN_ON_FAILURE :
-                CheckpointRetentionPolicy.RETAIN_ON_CANCELLATION;
-    } else {
-        //note: 默认是 NEVER_RETAIN_AFTER_TERMINATION，作业只要进入终止 checkpoint 就会删除
-        retentionAfterTermination = CheckpointRetentionPolicy.NEVER_RETAIN_AFTER_TERMINATION;
-    }
 
-    //note: 默认是 EXACTLY_ONCE
-    CheckpointingMode mode = cfg.getCheckpointingMode();
+        //  --- configure the master-side checkpoint hooks ---
 
-    boolean isExactlyOnce;
-    if (mode == CheckpointingMode.EXACTLY_ONCE) {
-        isExactlyOnce = true;
-    } else if (mode == CheckpointingMode.AT_LEAST_ONCE) {
-        isExactlyOnce = false;
-    } else {
-        throw new IllegalStateException("Unexpected checkpointing mode. " +
-            "Did not expect there to be another checkpointing mode besides " +
-            "exactly-once or at-least-once.");
-    }
+        final ArrayList<MasterTriggerRestoreHook.Factory> hooks = new ArrayList<>();
 
-    //  --- configure the master-side checkpoint hooks ---
+        for (StreamNode node : streamGraph.getStreamNodes()) {
+            if (node.getOperatorFactory() instanceof UdfStreamOperatorFactory) {
+                Function f =
+                        ((UdfStreamOperatorFactory) node.getOperatorFactory()).getUserFunction();
 
-    final ArrayList<MasterTriggerRestoreHook.Factory> hooks = new ArrayList<>();
-
-    for (StreamNode node : streamGraph.getStreamNodes()) {
-        if (node.getOperatorFactory() instanceof UdfStreamOperatorFactory) {
-            Function f = ((UdfStreamOperatorFactory) node.getOperatorFactory()).getUserFunction();
-
-            if (f instanceof WithMasterCheckpointHook) {
-                //note: 它会在 CheckpointCoordinator 端在每次 checkpoint 及 restore 时触发一个 'global action'
-                //note: 比如这里可以通过这个接口将状态刷到外部存储
-                hooks.add(new FunctionMasterCheckpointHookFactory((WithMasterCheckpointHook<?>) f));
+                if (f instanceof WithMasterCheckpointHook) {
+                    hooks.add(
+                            new FunctionMasterCheckpointHookFactory(
+                                    (WithMasterCheckpointHook<?>) f));
+                }
             }
         }
+
+        // because the hooks can have user-defined code, they need to be stored as
+        // eagerly serialized values
+        final SerializedValue<MasterTriggerRestoreHook.Factory[]> serializedHooks;
+        if (hooks.isEmpty()) {
+            serializedHooks = null;
+        } else {
+            try {
+                MasterTriggerRestoreHook.Factory[] asArray =
+                        hooks.toArray(new MasterTriggerRestoreHook.Factory[hooks.size()]);
+                serializedHooks = new SerializedValue<>(asArray);
+            } catch (IOException e) {
+                throw new FlinkRuntimeException("Trigger/restore hook is not serializable", e);
+            }
+        }
+
+        // because the state backend can have user-defined code, it needs to be stored as
+        // eagerly serialized value
+        final SerializedValue<StateBackend> serializedStateBackend;
+        if (streamGraph.getStateBackend() == null) {
+            serializedStateBackend = null;
+        } else {
+            try {
+                serializedStateBackend =
+                        new SerializedValue<StateBackend>(streamGraph.getStateBackend());
+            } catch (IOException e) {
+                throw new FlinkRuntimeException("State backend is not serializable", e);
+            }
+        }
+
+        // because the checkpoint storage can have user-defined code, it needs to be stored as
+        // eagerly serialized value
+        final SerializedValue<CheckpointStorage> serializedCheckpointStorage;
+        if (streamGraph.getCheckpointStorage() == null) {
+            serializedCheckpointStorage = null;
+        } else {
+            try {
+                serializedCheckpointStorage =
+                        new SerializedValue<>(streamGraph.getCheckpointStorage());
+            } catch (IOException e) {
+                throw new FlinkRuntimeException("Checkpoint storage is not serializable", e);
+            }
+        }
+
+        //  --- done, put it all together ---
+
+        JobCheckpointingSettings settings =
+                new JobCheckpointingSettings(
+                        CheckpointCoordinatorConfiguration.builder()
+                                .setCheckpointInterval(interval)
+                                .setCheckpointTimeout(cfg.getCheckpointTimeout())
+                                .setMinPauseBetweenCheckpoints(cfg.getMinPauseBetweenCheckpoints())
+                                .setMaxConcurrentCheckpoints(cfg.getMaxConcurrentCheckpoints())
+                                .setCheckpointRetentionPolicy(retentionAfterTermination)
+                                .setExactlyOnce(
+                                        getCheckpointingMode(cfg) == CheckpointingMode.EXACTLY_ONCE)
+                                .setTolerableCheckpointFailureNumber(
+                                        cfg.getTolerableCheckpointFailureNumber())
+                                .setUnalignedCheckpointsEnabled(cfg.isUnalignedCheckpointsEnabled())
+                                .setCheckpointIdOfIgnoredInFlightData(
+                                        cfg.getCheckpointIdOfIgnoredInFlightData())
+                                .setAlignedCheckpointTimeout(
+                                        cfg.getAlignedCheckpointTimeout().toMillis())
+                                .setEnableCheckpointsAfterTasksFinish(
+                                        streamGraph.isEnableCheckpointsAfterTasksFinish())
+                                .build(),
+                        serializedStateBackend,
+                        streamGraph.isChangelogStateBackendEnabled(),
+                        serializedCheckpointStorage,
+                        serializedHooks);
+
+        jobGraph.setSnapshotSettings(settings);
     }
-
-    // because the hooks can have user-defined code, they need to be stored as
-    // eagerly serialized values
-    //note: 这里对 hooks 做一下序列化
-    final SerializedValue<MasterTriggerRestoreHook.Factory[]> serializedHooks;
-    if (hooks.isEmpty()) {
-        serializedHooks = null;
-    } else {
-        try {
-            MasterTriggerRestoreHook.Factory[] asArray =
-                    hooks.toArray(new MasterTriggerRestoreHook.Factory[hooks.size()]);
-            serializedHooks = new SerializedValue<>(asArray);
-        }
-        catch (IOException e) {
-            throw new FlinkRuntimeException("Trigger/restore hook is not serializable", e);
-        }
-    }
-
-    // because the state backend can have user-defined code, it needs to be stored as
-    // eagerly serialized value
-    //note: 对 state backend 类做下序列化
-    final SerializedValue<StateBackend> serializedStateBackend;
-    if (streamGraph.getStateBackend() == null) {
-        serializedStateBackend = null;
-    } else {
-        try {
-            serializedStateBackend =
-                new SerializedValue<StateBackend>(streamGraph.getStateBackend());
-        }
-        catch (IOException e) {
-            throw new FlinkRuntimeException("State backend is not serializable", e);
-        }
-    }
-
-    //  --- done, put it all together ---
-
-    //note: 创建一个 JobCheckpointingSettings 对象
-    JobCheckpointingSettings settings = new JobCheckpointingSettings(
-        triggerVertices,
-        ackVertices,
-        commitVertices,
-        new CheckpointCoordinatorConfiguration( //note: 创建一个 CheckpointCoordinatorConfiguration 对象
-            interval,
-            cfg.getCheckpointTimeout(),
-            cfg.getMinPauseBetweenCheckpoints(),
-            cfg.getMaxConcurrentCheckpoints(),
-            retentionAfterTermination,
-            isExactlyOnce,
-            cfg.isPreferCheckpointForRecovery(),
-            cfg.getTolerableCheckpointFailureNumber()),
-        serializedStateBackend,
-        serializedHooks);
-
-    jobGraph.setSnapshotSettings(settings);
-}
 ```
 
 到这里，StreamGraph 转换为 JobGraph 的流程已经梳理完成了，个人感觉这部分还有一些绕的，不过这种开源代码，只要看多几遍，多 debug 看看具体的执行流程，基本都可以搞明白。
