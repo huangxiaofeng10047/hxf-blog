@@ -15,10 +15,15 @@ categories:
 
 **本文的主要内容：**
 
--   故障描述和排查过程
--   故障原因和解决方案分析
--   JVM堆内内存和堆外内存分配原理
--   常用的进程内存泄漏排查指令和工具介绍和使用
+- 故障描述和排查过程
+
+- 故障原因和解决方案分析
+
+- JVM堆内内存和堆外内存分配原理
+
+- 常用的进程内存泄漏排查指令和工具介绍和使用
+
+  <!--more-->
 
 > 文章撰写不易，请大家多多支持我的原创技术公众号：后端技术漫谈
 
@@ -62,6 +67,299 @@ JVM内存区域的划分为两块：堆区和非堆区。
 -   非堆区：非堆区如图中所示，有元数据区和直接内存。
 
 ![](https://gitee.com/qqxx6661/markdown-pic/raw/master/2020-8-26/1598435068322-image.png)
+
+![image-20210927112610260](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210927112610260.png)
+
+![image-20210927112636625](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210927112636625.png)
+
+下面来实战,了解一下
+
+## 堆内存溢出演示
+
+那么我们如何来构建一个堆内存溢出呢？其实很简单，我们只要定义一个`List`对象，然后通过一个循环不停的往`List`里面塞对象。因为只要Controller不被回收，那么它里面的成员变量也是不会被回收的。这样就会导致List里面的对象越来越多，占用的内存越来越大，最后就把我们的内存撑爆了。
+
+### 创建User对象
+
+这里我们先创建一个User对象。
+
+```java
+/**
+ * 
+　 * <p>Title: User</p>
+　 * <p>Description: </p>
+　 * @author Coder编程
+　 * @date 2020年3月29日
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+	private int id;
+	private String name;
+	
+}
+```
+
+这里面`@Data`、`@AllArgsConstructor`、`@NoArgsConstructor`用的是lombok注解。不会使用的小伙伴，可以在网上查找相关资料学习一下。
+
+### 创建Controller对象
+
+接下来我们来创建一个Controller来不停的往List集合中塞对象。
+
+```
+/**
+ * 
+　 * <p>Title: MemoryController</p>
+　 * <p>Description: </p>
+　 * @author Coder编程
+　 * @date 2020年3月29日
+ */
+@RestController
+public class MemoryController {
+	
+	private List<User>  userList = new ArrayList<User>();
+	
+	/**
+	 * -Xmx32M -Xms32M
+	 * */
+	@GetMapping("/heap")
+	public String heap() {
+		int i=0;
+		while(true) {
+			userList.add(new User(i++, UUID.randomUUID().toString()));
+		}
+	}
+	
+}
+```
+
+为了更快达到我们的效果，我们来设置两个参数。
+
+```
+-Xmx32M -Xms32M
+```
+
+一个最大内存，一个最小内存。我们的堆就只有32M，这样就很容易溢出。
+
+### 访问测试
+
+启动时候设置内存参数。
+![设置内存参数1](https://upload-images.jianshu.io/upload_images/7326374-deaacbb59b7123bf.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
+
+![设置内存参数2](https://upload-images.jianshu.io/upload_images/7326374-18d0b7ceea212833.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
+
+记得选中我们的`Arguments`，在`JVM` 参数中，将我们的值设置进去。最后点击`Run`运行起来。
+
+然后我们在浏览器中请求：
+http://localhost:8080/heap
+
+我们再观察控制台打印：
+![打印结果](https://gitee.com/hxf88/imgrepo/raw/master/img/7326374-b5c3a806e17d18cc.png)
+通过打印结果，我们可以看到堆内存溢出了。
+
+### 引入asm工具包
+
+这里我们引入**asm** jar包。
+
+```xml
+<dependency>
+	<groupId>asm</groupId>
+	<artifactId>asm</artifactId>
+	<version>3.3.1</version>
+</dependency>
+```
+
+### 动态生成类文件
+
+还需要创建动态生成的类文件，这里我们就不做扩展介绍，有兴趣的小伙伴可以自行到网上查阅。
+
+```java
+/**
+ * 
+　 * <p>Title: Metaspace</p>
+　 * <p>Description: https://blog.csdn.net/bolg_hero/article/details/78189621
+　 * 继承ClassLoader是为了方便调用defineClass方法，因为该方法的定义为protected</p>
+　 * @author Coder编程
+　 * @date 2020年3月29日
+ */
+public class Metaspace extends ClassLoader {
+	
+    public static List<Class<?>> createClasses() {
+        // 类持有
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        // 循环1000w次生成1000w个不同的类。
+        for (int i = 0; i < 10000000; ++i) {
+            ClassWriter cw = new ClassWriter(0);
+            // 定义一个类名称为Class{i}，它的访问域为public，父类为java.lang.Object，不实现任何接口
+            cw.visit(Opcodes.V1_1, Opcodes.ACC_PUBLIC, "Class" + i, null,
+                    "java/lang/Object", null);
+            // 定义构造函数<init>方法
+            MethodVisitor mw = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>",
+                    "()V", null, null);
+            // 第一个指令为加载this
+            mw.visitVarInsn(Opcodes.ALOAD, 0);
+            // 第二个指令为调用父类Object的构造函数
+            mw.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object",
+                    "<init>", "()V");
+            // 第三条指令为return
+            mw.visitInsn(Opcodes.RETURN);
+            mw.visitMaxs(1, 1);
+            mw.visitEnd();
+            Metaspace test = new Metaspace();
+            byte[] code = cw.toByteArray();
+            // 定义类
+            Class<?> exampleClass = test.defineClass("Class" + i, code, 0, code.length);
+            classes.add(exampleClass);
+        }
+        return classes;
+    }
+}
+```
+
+### 创建Controller
+
+接下来我们再原`Controller`新增一个方法nonheap
+
+```
+/**
+ * 
+　 * <p>Title: MemoryController</p>
+　 * <p>Description: </p>
+　 * @author Coder编程
+　 * @date 2020年3月29日
+ */
+@RestController
+public class MemoryController {
+	
+	private List<User>  userList = new ArrayList<User>();
+	private List<Class<?>>  classList = new ArrayList<Class<?>>();
+	
+	/**
+	 * -Xmx32M -Xms32M
+	 * */
+	@GetMapping("/heap")
+	public String heap() {
+		int i=0;
+		while(true) {
+			userList.add(new User(i++, UUID.randomUUID().toString()));
+		}
+	}
+	
+	
+	/**
+	 * -XX:MetaspaceSize=32M -XX:MaxMetaspaceSize=32M
+	 * */
+	@GetMapping("/nonheap")
+	public String nonheap() {
+		while(true) {
+			classList.addAll(Metaspace.createClasses());
+		}
+	}
+	
+}
+```
+
+### 访问测试
+
+这里我们同样在启动的时候也要设置Mataspace的值大小。
+
+```
+-XX:MetaspaceSize=32M -XX:MaxMetaspaceSize=32M
+```
+
+![设置启动参数](https://upload-images.jianshu.io/upload_images/7326374-8e4f4144fade608c.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
+
+接着我们在浏览器中访问地址：localhost:8080/nonheap
+
+以上我们就完成了对**堆内存溢出**以及**非堆内存溢出**的演示。
+
+#### 小插曲
+
+在测试非堆内存溢出的时候，出现了另外一个错误。
+java.lang.IncompatibleClassChangeError: Found interface org.objectweb.asm.MethodVisitor, but class was expected
+
+这个异常另外写在[java.lang.IncompatibleClassChangeError](https://www.jianshu.com/p/a2bf3b5f01a5)，小伙伴如果有遇到，可尝试一下是否能够解决
+
+## 如何查看线上堆内存溢出以及非堆内存溢出
+
+我们主要查看线上的内存映像文件来查看到底是哪里发生了内存溢出。
+发生内存溢出的主要原因：
+1.内存发生泄漏
+2.内存分配不足
+
+假如发生内存泄漏的话，我们就需要找到是哪个地方发生了内存泄漏，一直占用内存没有释放。
+
+下面我们来看一下如何来导出我们的内存映像文件。
+主要有两种方式。
+1.内存溢出自动导出
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=./
+第一个参数表示：当发生内存溢出的时候，将内存溢出文件Dump出来。
+第二个参数表示：Dump出来的文件存放的目录。
+
+2.使用jmap命令手动导出
+如果我们使用第一种命令，在发送内存溢出的时候再去导出，可能就有点晚了。我们可以等程序运行起来一段时间后，就可以使用jmap命令导出来进行分析。
+
+### 演示内存溢出自动导出
+
+我们需要用到两个命令参数。
+
+```
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=./
+```
+
+![自动导出命令参数](https://gitee.com/hxf88/imgrepo/raw/master/img/7326374-609d18a781f791bd.png)
+
+我们接着运行项目，访问：localhost:8080/heap
+查看一下打印结果。
+
+![打印结果](https://upload-images.jianshu.io/upload_images/7326374-451f038db60081a2.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
+
+可以看到，当发生了内存溢出后。输出了一个java_pid3972.hprof的文件。
+在当前项目的当前文件中，我们就可以找到该文件。
+
+### 演示jmap命令
+
+option:-heap,-clstats,-dump:,-F
+
+![jmap命令](https://upload-images.jianshu.io/upload_images/7326374-8137f7a1470de9d0.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
+
+![导出内存映像命令](https://gitee.com/hxf88/imgrepo/raw/master/img/7326374-320ff5363a4be405.png)
+
+参数都是什么意思呢？
+live:只导出存活的对象，如果没有指定，则全部导出
+format:导出文件的格式
+file:导入的文件
+
+我们刚才的程序还没有关闭，我们来看下程序的pid是多少。
+输入：jps -l
+![查看pid](https://upload-images.jianshu.io/upload_images/7326374-8158b60286991014.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
+
+我们将其文件导入到桌面中来，输入命令
+
+```
+jmap -dump:format=b,file=heap.hprof 3972
+```
+
+最后的3972是程序的pid。最后可以看到导出完毕。
+
+![导出完毕](https://gitee.com/hxf88/imgrepo/raw/master/img/7326374-393e153c1bdd4b00.png)
+
+还有其他的命令参数，小伙伴们可以去官网[jmap指令](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jmap.html#CEGCECJB)查看如何使用。这里就不做过多介绍。
+
+下一章节我们将通过命令实战定位JVM发生死循环、死锁问题。
+
+## 推荐
+
+- [[JVM教程与调优\] 什么是JVM运行时参数？](https://mp.weixin.qq.com/s?__biz=MzIwMTg3NzYyOA==&mid=2247484251&idx=1&sn=e174ffdc8730676ca729386d4f35757d&chksm=96e67248a191fb5e663339d8aadf8daa312ff06a6c473007b24ff456734247d3740ea56186a2&token=1619516654&lang=zh_CN#rd)
+- [[JVM教程与调优\] 为什么要学习JVM虚拟机？](https://mp.weixin.qq.com/s?__biz=MzIwMTg3NzYyOA==&mid=2247484247&idx=1&sn=e41732e54d5b57534d312dc9f15f47f0&chksm=96e67244a191fb5287c35c278cff4810939bd70a76cd4190fe7636d06b3ccb07f6aca974ed62&token=89408735&lang=zh_CN#rd)
+- [[JVM教程与调优\] JVM都有哪些参数类型？](https://mp.weixin.qq.com/s?__biz=MzIwMTg3NzYyOA==&mid=2247484247&idx=2&sn=a1f732611bab89f0db84d3ab162e8763&chksm=96e67244a191fb52a4d6b292112cc94c412d3c90a688bc6da533dec8cfe9cfa693af65b16dd5&token=89408735&lang=zh_CN#rd)
+
+## 文末
+
+> 注意：
+> 这里我们测试的时候可以很简单的看出在哪里出现的问题，但是在实际生产环境中并没有那么简单，因此我们需要借助工具，来定位这些问题。后续我们来介绍一下。
 
 **这里需要额外注意的是：永久代（JDK8的原生去）存放JVM运行时使用的类，永久代的对象在full GC时进行垃圾收集。**
 
