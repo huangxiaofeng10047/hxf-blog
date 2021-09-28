@@ -22,11 +22,15 @@ steps:
   image: node:lts
   commands:
       - npm config set cache ./.npm-cache --global 
-      - yarn config set registry https://registry.npm.taobao.org/
-      - cp  .downloadrc ~/
-      - yarn 
-      - npx hexo cl
-      - npx hexo g
+      # - yarn config set registry https://registry.npm.taobao.org/
+      # - cp  .downloadrc ~/
+      # - yarn 
+      # - npx hexo cl
+      # - npx hexo g
+      - npm --registry=https://registry.npm.taobao.org i hook-binary-mirror -g
+      - npm run preinstall
+      - npm install
+      - npm run build
 - name: rebuild-cache
   image: drillster/drone-volume-cache
   volumes:

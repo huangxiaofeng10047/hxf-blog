@@ -6,7 +6,8 @@
     "init": "validate-commit-msg",
     "dev": "npx hexo server",
     "build": "npx hexo generate",
-    "deploy": "npx hexo generate && sls deploy"
+    "deploy": "npx hexo generate && sls deploy",
+    "preinstall": "hook-binary-mirror"
   },
   "hexo": {
     "version": "5.4.0"
