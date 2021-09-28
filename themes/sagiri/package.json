@@ -31,10 +31,10 @@
     "cross-env": "7.0.3",
     "exports-loader": "2.0.0",
     "file-loader": "6.2.0",
-    "git-revision-webpack-plugin": "5.0.0",
+    "git-revision-webpack-plugin": "^5.0.0-1",
     "webpack": "^5.0.0",
     "webpack-bundle-analyzer": "^4.0.0",
-    "webpack-cli": "4.7.2"
+    "webpack-cli": "^4.8.0"
   },
   "dependencies": {
     "aplayer": "1.10.1",
@@ -43,6 +43,7 @@
     "dplayer": "1.26.0",
     "fancybox": "3.0.1",
     "fastclick": "1.0.6",
+    "git": "^0.1.5",
     "gsap": "3.7.0",
     "jquery-pjax": "2.0.1",
     "lazyload": "2.0.0-rc.2",

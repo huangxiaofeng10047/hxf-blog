@@ -1,8 +1,7 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const webpack = require('webpack');
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
-const gitRevisionPlugin = new GitRevisionPlugin();
+const { GitRevisionPlugin }  = require('git-revision-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
@@ -47,6 +46,7 @@ module.exports = {
     },
 
     plugins: [
+         new GitRevisionPlugin(),
         new BundleAnalyzerPlugin({
             logLevel: 'warn',
             reportFilename: 'video-report.html',
