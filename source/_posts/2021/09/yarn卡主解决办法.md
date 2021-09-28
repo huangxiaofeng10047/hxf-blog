@@ -5,7 +5,7 @@ tags:
 - hexo
 - npm
 categories: 
-- node
+- hexo
 ---
 更进一步
 实际使用中不可能每个项目都复制一份 hooks scripts，要脱离 case by case 必须自动化。
