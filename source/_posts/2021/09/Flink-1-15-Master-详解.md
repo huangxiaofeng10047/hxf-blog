@@ -13,7 +13,7 @@ categories:
 
 <!--more-->
 
-## [](http://matt33.com/2019/12/23/flink-master-5/#Flink-Master-%E7%AE%80%E4%BB%8B "Flink Master 简介")Flink Master 简介
+## Flink Master 简介
 
 Flink 的 Master 节点包含了三个组件: Dispatcher、ResourceManager 和 JobManager。其中:
 
@@ -30,7 +30,7 @@ Flink 的 Master 节点包含了三个组件: Dispatcher、ResourceManager 和 J
 
 当作业到 Dispatcher 后，Dispatcher 会首先启动一个 JobManager 服务，然后 JobManager 会向 ResourceManager 申请资源来启动作业中具体的任务。ResourceManager 选择到空闲的 Slot （[Flink 架构-基本概念](http://matt33.com/2019/11/23/flink-learn-start-1/#Flink-%E6%9E%B6%E6%9E%84)）之后，就会通知相应的 TM 将该 Slot 分配给指定的 JobManager。
 
-## [](http://matt33.com/2019/12/23/flink-master-5/#Master-%E5%90%AF%E5%8A%A8%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B "Master 启动整体流程")Master 启动整体流程
+## Master 启动整体流程
 
 Flink 集群 Master 节点在初始化时，会先调用 ClusterEntrypoint 的 `runClusterEntrypoint()` 方法启动集群，其整体流程如下图所示：
 
@@ -99,7 +99,7 @@ private void runCluster(Configuration configuration, PluginManager pluginManager
 
 下面来详细看下具体实现。
 
-### [](http://matt33.com/2019/12/23/flink-master-5/#initializeServices "initializeServices")initializeServices
+### initializeServices
 
 `initializeServices()` 初始化一些基本的服务，具体的代码实现如下：
 
@@ -169,7 +169,7 @@ protected void initializeServices(Configuration configuration, PluginManager plu
 
 这些服务都会在前面第二步创建 `DispatcherResourceManagerComponent` 对象时使用到。
 
-### [](http://matt33.com/2019/12/23/flink-master-5/#create-DispatcherResourceManagerComponent "create DispatcherResourceManagerComponent")create DispatcherResourceManagerComponent
+### create DispatcherResourceManagerComponent
 
 创建 `DispatcherResourceManagerComponent` 对象的实现如下：
 
@@ -373,8 +373,6 @@ protected void initializeServices(Configuration configuration, PluginManager plu
 ### DefaultDispatcherRunner
 
 **DefaultDispatcherRunner** 主要是用于作业的提交、并把它们持久化、为作业创建对应的 JobManager 等，Client 端提交的 JobGraph 就是提交给了 Dispatcher 服务，这里先看一下一个 Dispatcher 对象被选举为 leader 后是如何初始化的，如果当前的 Dispatcher 被选举为 leader，则会调用其 `grantLeadership()` 方法，该方法实现如下：
-
-1  
 
 ```
 //DefaultDispatcherRunner
