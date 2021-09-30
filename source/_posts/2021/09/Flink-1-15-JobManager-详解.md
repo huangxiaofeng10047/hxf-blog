@@ -145,9 +145,7 @@ public void startScheduling() {
  }  
 }  
 
-一个作业开始调度后详细流程如下图所示（其中比较核心方法已经标成黄颜色）：
 
-[![一个作业调度的详细流程](http://matt33.com/images/flink/6-job-schedule.png)](http://matt33.com/images/flink/6-job-schedule.png "一个作业调度的详细流程")一个作业调度的详细流程
 
 DefaultExecutionGraph 通过 `transitionToRunning` 方法和`transitionState（）`方法对这个作业调度执行，其方法实现如下：
 
