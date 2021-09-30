@@ -463,5 +463,24 @@ try {
 然后结束之前，还想总结一下今天的知识点：
 
 - 如何封装一个执行程序，需要哪些属性，怎么封装比较优雅（PackagedProgram）；
+
 - Flink 如何加载用户代码，保证和自己框架代码不冲突（UserCodeClassLoader）；
+
 - ContextClassLoader 经典用法是什么。
+
+  flink 作业远程调试
+  背景：开发过程中有时候需要调试集群中的作业或者源码
+  集群配置：
+  文件flink-conf.yaml
+  添加两行
+
+  ```
+  # jobmanager debug端口
+  env.java.opts.jobmanager: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006"
+  
+  # taskmanager debug端口
+  env.java.opts.taskmanager: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+  ```
+  
+  
+
