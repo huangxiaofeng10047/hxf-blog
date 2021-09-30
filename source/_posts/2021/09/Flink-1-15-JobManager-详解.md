@@ -10,6 +10,8 @@ categories:
 
 从之前文章的介绍中，我们已经知道 JobManager 其实就是一个作业的 master 服务，主要负责自己作业相关的协调工作，包括：向 ResourceManager 申请 Slot 资源来调度相应的 task 任务、定时触发作业的 checkpoint 和手动 savepoint 的触发、以及作业的容错恢复，这些流程将会在后面的系列文章中介绍（这些流程涉及到的组件比较多，需要等待后面把 TaskManager 及 Flink 的调度模型讲述完再回头来看），本文会从 JobManager 是如何初始化的、JobManager 有哪些组件以及分别提供了哪些功能这两块来讲述。
 
+<!--more-->
+
 ##JobManager 简介
 
 当用户向 Flink 集群提交一个作业后，Dispatcher 在收到 Client 端提交的 JobGraph 后，会为这个作业创建一个 JobManager 对象（对应的是 JobMaster 类），如下图所示：
