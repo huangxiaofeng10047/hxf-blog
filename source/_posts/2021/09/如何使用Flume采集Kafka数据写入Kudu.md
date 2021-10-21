@@ -11,6 +11,10 @@ categories:
 
 1.Flume已安装
 
+![image-20211013090721725](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20211013090721725.png)
+
+​																flume结构图
+
 2.Kudu与Impala服务已安装
 
 3.Kudu与Impala已集成
