@@ -1,7 +1,10 @@
 ---
 title: jstack查看线程状态和内存占用
 date: 2021-10-15 10:32:08
-tags:
+tags: 
+- springboot
+categories: 
+- java
 ---
 
 jstack -l pid 可以查询java线程状态

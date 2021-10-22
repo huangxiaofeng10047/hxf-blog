@@ -1,7 +1,10 @@
 ---
 title: java进程占用哪些空间
 date: 2021-10-21 08:56:31
-tags:
+tags: 
+- springboot
+categories: 
+- java
 ---
 
 一个java进程具体占用哪些空间可以开启nmat来查看，通过在启动参数上加上“-XX:NativeMemoryTracking=detail”即可
