@@ -34,3 +34,19 @@ mvn clean install -T 2C  -DskipTests  -Dmaven.compile.fork=true
 
 [flink1.12编译](https://www.codetd.com/article/11298428)
 
+编译命令
+
+```
+解释： mvn clean install \
+	-DskipTests \                # 跳过测试部分
+	-Dfast \         # 跳过QA 的插件和 JavaDocs 的生成
+	-T 4 \                       # 支持多处理器或者处理器核数参数,加快构建速度,推荐Maven3.3及以上
+	-Dmaven.compile.fork=true                   #允许多线程编译,推荐maven在3.3及以上
+	
+mvn clean install \
+-DskipTests \
+-Dfast \
+-T 4 \
+-Dmaven.compile.fork=true 
+```
+

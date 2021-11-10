@@ -110,3 +110,17 @@ notepad $PROFILE
 
 完美！！！！
 
+使用新主题是，先导出主题，再把修改后的主题导入即可。
+
+- powershell
+- zsh
+- bash
+- fish
+
+Export-PoshTheme -FilePath "~/.mytheme.omp.json" -Format json
+
+Copy
+
+Once you're done editing, adjust your `$PROFILE` to use your newly created theme.
+
+oh-my-posh --init --shell pwsh --config "~/.mytheme.omp.json" | Invoke-Expression

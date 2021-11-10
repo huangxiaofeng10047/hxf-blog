@@ -34,7 +34,7 @@ tags: linnux manjarco
 PS: 以下部分都以 root 用户身份运行命令。
 
 ```bash
-Copypasswd # 设置密码
+passwd # 设置密码
 # 设置软件源
 echo 'Server = https://mirrors.neusoft.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
@@ -55,7 +55,7 @@ multilib 库包含 64 位系统中需要的 32 位软件和库。
 `vim /etc/pacman.conf`，取消这几行的注释：
 
 ```
-Copy[multilib]
+[multilib]
 Include = /etc/pacman.d/mirrorlist
 ```
 
@@ -66,13 +66,13 @@ Include = /etc/pacman.d/mirrorlist
 Arch Linux 中文社区仓库 是由 Arch Linux 中文社区驱动的非官方用户仓库。包含中文用户常用软件、工具、字体/美化包等。
 
 ```bash
-Copyvim /etc/pacman.conf
+vim /etc/pacman.conf
 ```
 
 在文件末尾加上：
 
 ```conf
-Copy[archlinuxcn]
+[archlinuxcn]
 Server = https://mirrors.aliyun.com/archlinuxcn/$arch
 # 其他的见 https://github.com/archlinuxcn/mirrorlist-repo，最好是用自己学校的
 ```
@@ -80,7 +80,7 @@ Server = https://mirrors.aliyun.com/archlinuxcn/$arch
 然后：
 
 ```bash
-Copypacman -Syy
+pacman -Syy
 pacman -S archlinuxcn-keyring
 ```
 
@@ -90,11 +90,12 @@ pacman -S archlinuxcn-keyring
 *注：此处的 yourname 是你要创建的用户名*
 
 ```bash
-Copy# 新建用户。-m 为用户创建家目录；-G wheel 将用户添加到 wheel 用户组
+# 新建用户。-m 为用户创建家目录；-G wheel 将用户添加到 wheel 用户组
 useradd -m -G wheel xfhuang
 # 设置密码
 passwd xfhuang
-
+123
+123
 # 因为 visudo 需要 vi
 ln -s /usr/bin/vim /usr/bin/vi
 # 编辑 /etc/sudoers
@@ -104,54 +105,59 @@ visudo
 将以下两行行首的`#`去掉
 
 ```bash
-Copy# %wheel ALL=(ALL) ALL
+# %wheel ALL=(ALL) ALL
 # %wheel ALL=(ALL) NOPASSWD: ALL
 ```
 
-在 powershell 中进入到 Arch.exe 所在文件夹，设置 WSL 默认登陆用户和默认的 WSL：
+在 powershell 中进入到  Manjaro.exe 所在文件夹，设置 WSL 默认登陆用户和默认的 WSL：
 
 ```powershell
-Copy.\Arch.exe config --default-user yourname
-wsl -s Arch
+ Manjaro.exe  config --default-user xfhuang
+wsl -s Manjaro
+
 ```
 
-重新打开，就是在 yourname 用户了。
+重新打开，就是在 xfhuang用户了。
+
+![image-20211103141941713](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20211103141941713.png)
 
 ## 安装常用软件[#](https://www.cnblogs.com/zsmumu/p/archlinux-wsl2.html#1880665260)
 
-PS: 这部分以 yourname 用户身份运行命令。
+PS: 这部分以 xfhuang用户身份运行命令。
 
 ### 安装 yay[#](https://www.cnblogs.com/zsmumu/p/archlinux-wsl2.html#1538716494)
 
 ```bash
-Copysudo pacman -S --needed base-devel
+sudo pacman -S --needed base-devel
 ```
 
 出现`:: fakeroot is in IgnorePkg/IgnoreGroup. Install anyway? [Y/n]`，选 n，接下来一直回车即可。
 
 ```bash
-Copysudo pacman -S --needed yay
+sudo pacman -S --needed yay
 # yay 换源
 yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 ```
 
+![image-20211103154829100](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20211103154829100.png)
+
 ### 安装其他的一些软件[#](https://www.cnblogs.com/zsmumu/p/archlinux-wsl2.html#3500358456)
 
 ```bash
-Copysudo pacman -S --needed neofetch lolcat bat tokei tree screenfetch
+sudo pacman -S --needed neofetch lolcat bat tokei tree screenfetch
 neofetch | lolcat -a
 ```
 
 ### 安装 gcc、clang、qemu 等[#](https://www.cnblogs.com/zsmumu/p/archlinux-wsl2.html#1080076022)
 
 ```bash
-Copysudo pacman -S --needed gcc clang lib32-gcc-libs gdb make binutils git openssh man-pages ccls
+sudo pacman -S --needed gcc clang lib32-gcc-libs gdb make binutils git openssh man-pages ccls
 ```
 
 安装 qemu（有需要就安装吧）：
 
 ```bash
-Copysudo pacman -S --needed qemu-arch-extra
+sudo pacman -S --needed qemu-arch-extra
 ```
 
 ### 安装 zsh[#](https://www.cnblogs.com/zsmumu/p/archlinux-wsl2.html#2194599011)
@@ -164,7 +170,7 @@ Copysudo pacman -S --needed qemu-arch-extra
 安装 zsh 并且将其设置为默认 shell：
 
 ```bash
-Copysudo pacman -S --needed zsh
+sudo pacman -S --needed zsh
 # 编辑 /etc/passwd 文件，将 root 用户和 yourname 用户的 /bin/bash 改为 /bin/zsh
 # 或者使用 chsh -s /bin/zsh 来改变当前用户的默认shell
 sudo vim /etc/passwd
@@ -179,21 +185,55 @@ sudo ln -s ~/.zshrc /root/.zshrc
 可以使用 windows 的 [qv②ray](https://qv2ray.net/)/clash/ssr 等代理软件来代理 wsl 中的程序！先安装 proxychains：
 
 ```bash
-Copysudo pacman -S --needed proxychains-ng
+sudo pacman -S --needed proxychains-ng
 ```
 
-首先，`sudo vim /etc/proxychains.conf`，将`proxy_dns`这一行注释。（这样能够让 proxychains 代理 yay）
+首先，`sudo vim /etc/proxychains.conf`，
+
+*将`proxy_dns`这一行注释。*
+
+*（这样能够让 proxychains 代理 yay）*
+
+## 问题如下
+
+```bash
+$ proxychains yay -S petal
+[proxychains] config file found: /etc/proxychains.conf
+[proxychains] preloading /usr/lib/libproxychains4.so
+[proxychains] DLL init: proxychains-ng 4.14
+Get https://aur.archlinux.org/rpc.php?arg%5B%5D=petal&type=info&v=5: dial tcp 224.0.0.1:443: connect: network is unreachable
+```
+
+
+
+## 解决方法
+
+修改proxychains配置文件，把proxy_dns注释掉。
+
+1. 打开proxychains.conf文件
+
+```bash
+$ sudo vim /etc/proxychains.conf
+```
+
+1. 找到52行的位置，在proxy_dns前加上#号
+
+```bash
+52 # proxy_dns
+```
+
+**修改完成后就可以愉快的使用yay了**
 
 如果用的是 WSL 1，那就 `sudo vim /etc/proxychains.conf`，将最后一行的 socks4 127.0.0.1 9095 修改为：
 
 ```
-Copysocks5 127.0.0.1 7890
+socks5 127.0.0.1 7890
 ```
 
 这个 7890 是我的 qv②ray 的 socks5 端口号，改成你自己的。如果你用的是 WSL 2，由于目前 WSL 2 和 windows 的 ip 不同，我们需要先`cp -f /etc/proxychains.conf ~/.proxychains.conf`，然后在`~/.zshrc`中添加以下内容：
 
 ```bash
-Copy# 获取windows的ip
+# 获取windows的ip
 export WIN_IP=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`
 # 删除 ~/.proxychains.conf 中 [ProxyList] 所在行到文件末尾的全部内容
 sed -i '/\[ProxyList\]/,$d' ~/.proxychains.conf
@@ -210,7 +250,7 @@ alias p-off='unset all_proxy http_proxy https_proxy'
 然后：
 
 ```bash
-Copy# 在 yourname 用户中
+# 在 yourname 用户中
 sudo ln -s ~/.proxychains.conf /root/.proxychains.conf
 source ~/.zshrc
 ```
@@ -238,14 +278,17 @@ New-NetFirewallRule -DisplayName "WSL" -Direction Inbound -InterfaceAlias "vEthe
 
 使用 antigen 管理 zsh 的插件：
 
+需要吧yay的源换回自己的，再用翻墙的
+
 ```bash
-Copypc yay -S antigen
+yay --aururl "https://aur.archlinux.org" --save
+pc yay -S antigen
 ```
 
 往`~/.zshrc`中添加如下内容，以启用历史命令、按键绑定、命令补全、语法高亮、powerlevel10k 主题：
 
 ```bash
-Copy# 初始化 antigen
+# 初始化 antigen
 source /usr/share/zsh/share/antigen.zsh
 # Load the oh-my-zsh's library
 # oh-my-zsh 会启用历史命令、按键绑定等功能
@@ -276,7 +319,7 @@ WSL 不支持 systemd，但可以使用其他方法运行 systemd。详见[syste
 `vim PKGBUILD`，填入如下内容：
 
 ```sh
-Copy# Maintainer: Arley Henostroza <arllk10[at]gmail[dot]com>
+# Maintainer: Arley Henostroza <arllk10[at]gmail[dot]com>
 # Contibutor: facekapow
 
 pkgname=genie-systemd
@@ -315,28 +358,30 @@ package() {
 然后进行安装（注意需要和 PKGBUILD 在相同目录）
 
 ```bash
-Copyyay -S daemonize
+yay -S daemonize
 makepkg -si # 处理依赖并安装
 ```
 
 然后就可以使用 genie 了
 
 ```bash
-Copy# 运行 genie -i，让ArchWSL可以正常使用systemd
-genie -i
+# 运行 genie -i，让ArchWSL可以正常使用systemd
+genie -i #windows11 不可用 需要下载genie包，进行安装版本1.44
+#安装命令
+sudo pacman -U genie-systemd-1.44-1-x86_64.pkg.tar.zst
 ```
 
 接下来让 ArchWSL 在 windows 开机时，就能够自动`genie -i`。
 
 ```bash
-Copysudo echo 'genie -i' > /etc/init.wsl
+sudo echo 'genie -i' > /etc/init.wsl
 sudo chmod +x /etc/init.wsl
 ```
 
 在 windows 上创建`ArchWSL-init.vbs`文件（这里的 Arch 是该 wsl 发行版的名称，可通过`wsl -l`命令查看），文件内容为：
 
 ```vbs
-CopySet ws = CreateObject("Wscript.Shell")
+Set ws = CreateObject("Wscript.Shell")
 ws.run "wsl -d Arch -u root /etc/init.wsl", vbhide
 ```
 
@@ -376,3 +421,4 @@ sudo pacman -S --needed xorg
 ```
 
  
+
