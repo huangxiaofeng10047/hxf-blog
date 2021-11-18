@@ -2,6 +2,9 @@
 title: flomesh-bookinfo-demo的k8s方案学习
 date: 2021-11-05 12:50:22
 tags:
+- flink
+categories: 
+- bigdata
 ---
 
 ````
@@ -337,7 +340,7 @@ $ kubectl apply -f base/productpage-v2.yaml
 检查 pod 状态，可以看到所有 pod 都注入了容器。
 
 ```shell
-$ kubectl get pods
+$ kubectl get pods -n flomesh-spring
 samples-discovery-server-v1-85798c47d4-p6zpb       3/3     Running   0          19h
 samples-config-service-v1-84888bfb5b-8bcw9         1/1     Running   0          19h
 samples-api-gateway-v1-75bb6456d6-nt2nl            3/3     Running   0          6h43m

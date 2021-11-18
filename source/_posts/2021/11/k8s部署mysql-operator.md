@@ -2,12 +2,17 @@
 title: k8s部署mysql-operator
 date: 2021-11-10 15:12:19
 tags:
+- es
+categories: 
+- bigdata
 ---
 
 k3d创建一个1主2从的集群
 
 ```console
 k3d cluster create first-cluster --port 8080:80@loadbalancer --port 8443:443@loadbalancer --api-port 6443 --servers 1 --agents 2
+k3d cluster create first-cluster --port 8080:80@loadbalancer --port 8443:443@loadbalancer --api-port 6443 --servers 1 --agents 2
+
 #下面会解释的
 #设置上下文
 kubectl config use-context k3d-first-cluster
