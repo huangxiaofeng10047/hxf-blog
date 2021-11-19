@@ -17,3 +17,4 @@ categories:
   --restart=always \
   minio/minio server /data --console-address ":9001"
 2508ee6ba64294e45425da7afb3fffb2a31ff9d3fbc9887f5ae5fda705b7d0dc
+

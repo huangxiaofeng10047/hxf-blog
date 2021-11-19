@@ -95,5 +95,11 @@ Handling connection for 8081
 Handling connection for 8081
 Handling connection for 8081
 Handling connection for 8081
+当想指定某一个ip时，可以通过address来指定
+➜  kubectl port-forward my-flink-jobmanager-67fbf68486-tsknt 8081:8081 -n flink --address 192.168.50.16
+Forwarding from 192.168.50.16:8081 -> 8081
+Handling connection for 8081
+Handling connection for 8081
+Handling connection for 8081
 ```
 
