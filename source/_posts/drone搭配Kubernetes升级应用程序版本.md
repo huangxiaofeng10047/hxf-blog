@@ -1,0 +1,295 @@
+---
+
+title: drone搭配Kubernetes升级应用程序版本
+date: 2021-08-27 10:55:02
+tags:
+- k8s
+- drone
+categories: 
+- devops
+---
+使用kind 安装k8s服务：
+dronci-》k8s 升级k8s应用
+
+<!--more-->
+
+```yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drone-deploy
+  namespace: demo
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: drone-deploy
+  namespace: demo
+rules:
+  - apiGroups: ["extensions"]
+    resources: ["deployments"]
+    verbs: ["get","list","patch","update"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drone-deploy
+  namespace: demo
+subjects:
+  - kind: ServiceAccount
+    name: drone-deploy
+    namespace: demo
+roleRef:
+  kind: Role
+  name: drone-deploy
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-node-demo
+  namespace: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+        app: k8s-node-demo
+  template:
+    metadata:
+      labels:
+        app: k8s-node-demo
+    spec:
+      containers:
+      - image: appleboy/k8s-node-demo
+        name: k8s-node-demo
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-node-demo
+  namespace: demo
+  labels:
+    app: k8s-node-demo
+spec:
+  selector:
+    app: k8s-node-demo
+  # if your cluster supports it, uncomment the following to automatically create
+  # an external load-balanced IP for the frontend service.
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+```
+
+```
+drone-nodejs-example/k8s on  master [📝++(13)]
+➜ kubectl -n demo get serviceAccounts
+NAME           SECRETS   AGE
+default        1         9m58s
+drone-deploy   1         9m58s
+```
+
+
+kubectl -n demo get serviceAccounts/drone-deploy -o yaml
+
+```
+➜ kubectl -n demo get serviceAccounts/drone-deploy -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"name":"drone-deploy","namespace":"demo"}}
+  creationTimestamp: "2021-08-27T02:56:41Z"
+  name: drone-deploy
+  namespace: demo
+  resourceVersion: "1260"
+  uid: 6f565fe9-eaeb-4ae7-9d2d-7c7f7ee88132
+secrets:
+- name: drone-deploy-token-v6wt6
+```
+
+可以看到 `drone-deploy-token-v6wt6` 此 secret name，接着从这个名称 `ca.cert` 跟 `token`:
+
+```
+$ kubectl -n demo get \
+  secret/drone-deploy-token-v6wt6 \
+  -o yaml | egrep 'ca.crt:|token:'
+```
+
+输出
+
+```
+ ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURtVENDQW9HZ0F3SUJBZ0lVZVZGalNsay9PK2JIK1lZODZOYU5Ydjg2Q3dnd0RRWUpLb1pJaHZjTkFRRUwKQlFBd1hERUxNQWtHQTFVRUJoTUNlSGd4Q2pBSUJnTlZCQWdNQVhneENqQUlCZ05WQkFjTUFYZ3hDakFJQmdOVgpCQW9NQVhneENqQUlCZ05WQkFzTUFYZ3hDekFKQmdOVkJBTU1BbU5oTVJBd0RnWUpLb1pJaHZjTkFRa0JGZ0Y0Ck1CNFhEVEl4TURneU56QXhORGN4TUZvWERUSXlNRGd5TnpBeE5EY3hNRm93WERFTE1Ba0dBMVVFQmhNQ2VIZ3gKQ2pBSUJnTlZCQWdNQVhneENqQUlCZ05WQkFjTUFYZ3hDakFJQmdOVkJBb01BWGd4Q2pBSUJnTlZCQXNNQVhneApDekFKQmdOVkJBTU1BbU5oTVJBd0RnWUpLb1pJaHZjTkFRa0JGZ0Y0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGCkFBT0NBUThBTUlJQkNnS0NBUUVBdUZ4ekVTTmFiblFhUFZ2REFYalJkVCtwU2x5cWprNG9tSWNvaWR3VzdiSlYKbDZDbUhkR1V2anh1ZVd0UlVKL1ViMFBLRmU4QitpMkRudnRmNGJSYUdHOTUraEwyTS9nNXNlSEs0RzFOVkwyVwpRSmc1UDlqeDBNQ3I5V1I1dG1IMFphbG5pNm5YRFUxV3VySVZKb2JJR1VuSjJxcUt1b0tDNXVQRitsMHVaT3RYCkNHZ3hoRGRnM01xZGJDV3lveTEvZGdPbE1wcmFIOGN0cjQ1eks5clpvdXF1QW45NmRuMW9PcHp1dmVzZ29UN1oKcnBkVDc0b1N1bEF4R2tTbXBrdE1idTc0Q1JrYk12OXd2OVpMcGRQb1FIVDF4UEhLbHAwcXZJelM2V3VleFh2ZQpYUXhod3Z6SGd0ZDJLUkhaMWNGRW5Ja0VKS00zdmZqclhkOUdzd1ljMFFJREFRQUJvMU13VVRBZEJnTlZIUTRFCkZnUVVMVUxqNTRodXFkd2hhQ1psdWFBYkVSQmE2WVF3SHdZRFZSMGpCQmd3Rm9BVUxVTGo1NGh1cWR3aGFDWmwKdWFBYkVSQmE2WVF3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBUlZObgpzOWo5dVlaQVgrODVBNys5VzRuc0N1YTBONXR6M0lGNVkyS0I2S01vSXBXaVJ4aGV6MGp2dWZxWHdtbU1MZ1dzCnFHd0IyTmNEam1ReUVTYjdweXpMaXpCbzFSbU1LckJWYmRDdFV0RDBFVis5czZ5bzRRN2Y0ZnRLMytIWnhTLysKZ29WbVlRWnU4eUw5REZ3NDZBRXkwNjZWQ3IyNnlMckpOMUZoajRoMWpDanhzd08wVXlhOEFxWTBGbWRKenJTaQo4M2Q4TFYvNG9RV2ZxWmJaSlRreGlNNEYrOHh3eE54Rk1lWnE2MHFoS3A1QThHcnUwN3JORzB2SFN1RUg5c1NUCjNncW9wUGNUVHVjY2dmNFF6UVpiOVJKVGwwK1E3MnlUdVFvQ2o0OTdScCtWcklRbnRON2lvZEdPY3dXRXgxMS8KVnZEMU1BOEdISXRpZTkwempBPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklqY3lkMUJLVTNwNlN6UkJXRWRZVVVrMFNIUkpVRTl1TVU4MExWZFBVVWh4WkV0aFNVUXRSMFF3VGtVaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMTJObmQwTmlJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSTJaalUyTldabE9TMWxZV1ZpTFRSaFpUY3RPV1F5WkMwM1l6ZG1OMlZsT0RneE16SWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuZ2t2d2NmWnFrOEsteGozRlpxb3lFQ2lJVGpiQ213Q3ltZy02ZW4yNF9UaVNLY2FkbThYc0c1QUVrY2xqOV9fMW5LeEpaby1WbE5XelZMSDkyZEhIQjg2dlB3blRNZnlPS1dlTDYxcjZXYURWRmhJcGdBaFRrUldwSW1VREtNcDJzTXhBSXYzTnR3bEFDaGhGSUE2RTY1ZG9oVDFsYV9VdkhnTjIxeFZ5NmxwbWp3eEdvYU9uWlE5UHY0cUdWNllDRWEtM0Z2U0VHVVpFS2JlTmFGd1E1eEFIc2s0aGo4cnJUQ1c5Q3JLMTBWaHZMcDFKdV9FUEYxTjhSU0tHY2V0WTlLdUs0dmgzLTFtdDRTb0JyNDdyTnpibktaQlRVdHA1Q3didFQ2OHNKRXR0a19tNExKRXl4ZWM4NnVLVlU1UnFaclV1bmp6NkFURXVYT2tTeURmRkFR
+```
+
+由於 token 是透過 `base64` encode 輸出的。那也是要用 base64 decode 解出
+
+```
+# linux:
+$ echo ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklqY3lkMUJLVTNwNlN6UkJXRWRZVVVrMFNIUkpVRTl1TVU4MExWZFBVVWh4WkV0aFNVUXRSMFF3VGtVaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMTJObmQwTmlJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSTJaalUyTldabE9TMWxZV1ZpTFRSaFpUY3RPV1F5WkMwM1l6ZG1OMlZsT0RneE16SWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuZ2t2d2NmWnFrOEsteGozRlpxb3lFQ2lJVGpiQ213Q3ltZy02ZW4yNF9UaVNLY2FkbThYc0c1QUVrY2xqOV9fMW5LeEpaby1WbE5XelZMSDkyZEhIQjg2dlB3blRNZnlPS1dlTDYxcjZXYURWRmhJcGdBaFRrUldwSW1VREtNcDJzTXhBSXYzTnR3bEFDaGhGSUE2RTY1ZG9oVDFsYV9VdkhnTjIxeFZ5NmxwbWp3eEdvYU9uWlE5UHY0cUdWNllDRWEtM0Z2U0VHVVpFS2JlTmFGd1E1eEFIc2s0aGo4cnJUQ1c5Q3JLMTBWaHZMcDFKdV9FUEYxTjhSU0tHY2V0WTlLdUs0dmgzLTFtdDRTb0JyNDdyTnpibktaQlRVdHA1Q3didFQ2OHNKRXR0a19tNExKRXl4ZWM4NnVLVlU1UnFaclV1bmp6NkFURXVYT2tTeURmRkFR | base64 -d && echo''
+# macOS:
+$ echo token | base64 -D && echo'
+```
+
+```shell
+eyJhbGciOiJSUzI1NiIsImtpZCI6Ijcyd1BKU3p6SzRBWEdYUUk0SHRJUE9uMU80LVdPUUhxZEthSUQtR0QwTkUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRyb25lLWRlcGxveS10b2tlbi12Nnd0NiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkcm9uZS1kZXBsb3kiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI2ZjU2NWZlOS1lYWViLTRhZTctOWQyZC03YzdmN2VlODgxMzIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVtbzpkcm9uZS1kZXBsb3kifQ.gkvwcfZqk8K-xj3FZqoyECiITjbCmwCymg-6en24_TiSKcadm8XsG5AEkclj9__1nKxJZo-VlNWzVLH92dHHB86vPwnTMfyOKWeL61r6WaDVFhIpgAhTkRWpImUDKMp2sMxAIv3NtwlAChhFIA6E65dohT1la_UvHgN21xVy6lpmjwxGoaOnZQ9Pv4qGV6YCEa-3FvSEGUZEKbeNaFwQ5xAHsk4hj8rrTCW9CrK10VhvLp1Ju_EPF1N8RSKGcetY9KuK4vh3-1mt4SoBr47rNzbnKZBTUtp5CwbtT68sJEttk_m4LJEyxec86uKVU5RqZrUunjz6ATEuXOkSyDfFAQ
+```
+
+放弃这种方式了，还是通过kind创建：
+
+kind create cluster --name multi-node --config=kind-config.yml
+
+ kubectl -n demo get serviceAccounts/drone-deploy -o yaml
+kind-config.yml文件如下：
+需要注意的是指定了apiServer的地址，让远程服务可以访问
+
+```
+ kubectl -n demo get serviceAccounts/drone-deploy -o yaml
+ kind: ServiceAccount
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"name":"drone-deploy","namespace":"demo"}}
+  creationTimestamp: "2021-08-27T06:21:41Z"
+  name: drone-deploy
+  namespace: demo
+  resourceVersion: "632"
+  uid: d925d67f-77a2-4769-8eef-756012af33c6
+secrets:
+- name: drone-deploy-token-wllxp
+$ kubectl -n demo get \
+  secret/drone-deploy-token-wllxp \
+  -o yaml | egrep 'ca.crt:|token:'
+  输出如下：
+  ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1EZ3lOekEyTVRrME0xb1hEVE14TURneU5UQTJNVGswTTFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTTFhCkVrMFBkUzlHd0haY2VLNWFEYVUrS2o4c0s2cGJJQS96eVhkQjYvYWJ3RWRsdGVTS2hYUmZPQzdnN2xiRituUmYKTmcvaCsvTC85bG0zVE8xUVlCQmw0aXlBZXpoV1k1c2NPUkUwWjZNTDBlTHVPbzhvUStFZ3B0ZElLQXJVWUdRUAoxWEN0SkVHVUd4TjEybUdTellmWVE5bWgzV2lzekgrbXZ1d2UyeDRuakVmdGl1S3JxSU1BWE9CdmNwNnEzYUhoCkMxQUJ0QzdEUzNvMDcxUnY3U3plTXdiTlJoSWk3YmNRL1c1VXhGR3JXQnRLRWUyUWU0VG9kaTR2V0JTaStHZTcKalVFRk5ac3NlbkhuV1dJNHVMUURmbnpiYlVsdFIrZEhmWjRWUHMxVWpFeHFZUzYxeWV1VEZWUXlhTVRsNjhjNAp4NVJiMDZDcGxMNGFPbU45T1prQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZFOXN2MEp2OEFIZTJTTkhMdTNXeGdMVWd1aG5NQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFCcjBVZkdNVEdtajJlV2xFWGhVckJHV3dqb0VxUEpTdHlGQncrdnRnMytidDhuZnlGcwp2VkVUOGhvYTZpam5Rb0FZWkl3TWFucFlMRVBZcVVqd1pCZHFLeXJMVnBxYU1HNTZqSW1MWVdNZDhLS25QTEJBCk91QWFrWHNoaWNnNnZ1dmZNajBUM25Jdng0WExMNDlFQ3Ardk9YOWg2cGlYdGtRbnFMUzBjRlBNNGloNENuZzUKRnk4a2VnUU0wWGg4OUdKL0luRy9PTHdMNGJQSVpNd3UwZUtDUHpGbWt1R3NGRTdTYWc5T1BQcXREVjBqZVVJOQpXVGs1M1J0dWxISjlUK1krZEFKbjFhY0JRc3BpL0JZR3N0dGF5L0R6S092ZVBhY3Z5UDBKeml4KzZyNEFyTjdVCklkSk1hcGNRT0M0QjVOUWt1MkVVSjZJNmFPd1NMR1I2bHUvdAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklreDNSMnBSTWpCcFNrdG1iVXhXWW5wS1NYcHNjM1JGT1d4aGEwSnZaRVZPYUdSb2NqUlpNemhyTTBFaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMTNiR3g0Y0NJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSmtPVEkxWkRZM1ppMDNOMkV5TFRRM05qa3RPR1ZsWmkwM05UWXdNVEpoWmpNell6WWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuR3NOZDNwd3BEMkxWTV90Y1o2TmF3UjJ1SDZveDV1bGVfcGVFaFJxdW1xNUpPcWczOEtEbm5xcTROVm5EWldTWGRwU29mb09mbXN4Mjd4VFpRNUJlRjZmYTBHS0I3ZU9GZXMzdFc4S1Y2OW5ycHQ4bmNXV29hUVFVREFtSjVDT3NieFNPbVF2YnRGQW1MdUFneXB0LXphQUpBT016UVlpZVdlVWp0SW9LQ1BkNlBha0VuN0tXaVl2UHRUb3psY3FOOEJZZkVNQkdVWGFDeFh4dl9HeFVsZU9TakY1SnpJaVZxOUIyaXctNlFuUExPUTRtV2R6MmVwZnEtTHNPcmI2b3lybGx5YWt2U1ZsWmR3dEtZRnF0dS1Bbk5tYzkzSldLR1pER1ZobmYtNWhOdGE3TmVCVHN3aURxNGJleDZsS1BCbFR5LTQtVlE3VHlwOGdneHpHMGZB
+  解码：
+   linux:
+$ echo ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklreDNSMnBSTWpCcFNrdG1iVXhXWW5wS1NYcHNjM1JGT1d4aGEwSnZaRVZPYUdSb2NqUlpNemhyTTBFaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMTNiR3g0Y0NJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSmtPVEkxWkRZM1ppMDNOMkV5TFRRM05qa3RPR1ZsWmkwM05UWXdNVEpoWmpNell6WWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuR3NOZDNwd3BEMkxWTV90Y1o2TmF3UjJ1SDZveDV1bGVfcGVFaFJxdW1xNUpPcWczOEtEbm5xcTROVm5EWldTWGRwU29mb09mbXN4Mjd4VFpRNUJlRjZmYTBHS0I3ZU9GZXMzdFc4S1Y2OW5ycHQ4bmNXV29hUVFVREFtSjVDT3NieFNPbVF2YnRGQW1MdUFneXB0LXphQUpBT016UVlpZVdlVWp0SW9LQ1BkNlBha0VuN0tXaVl2UHRUb3psY3FOOEJZZkVNQkdVWGFDeFh4dl9HeFVsZU9TakY1SnpJaVZxOUIyaXctNlFuUExPUTRtV2R6MmVwZnEtTHNPcmI2b3lybGx5YWt2U1ZsWmR3dEtZRnF0dS1Bbk5tYzkzSldLR1pER1ZobmYtNWhOdGE3TmVCVHN3aURxNGJleDZsS1BCbFR5LTQtVlE3VHlwOGdneHpHMGZB | base64 -d && echo''
+解码输出：
+eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx3R2pRMjBpSktmbUxWYnpKSXpsc3RFOWxha0JvZEVOaGRocjRZMzhrM0EifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRyb25lLWRlcGxveS10b2tlbi13bGx4cCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkcm9uZS1kZXBsb3kiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJkOTI1ZDY3Zi03N2EyLTQ3NjktOGVlZi03NTYwMTJhZjMzYzYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVtbzpkcm9uZS1kZXBsb3kifQ.GsNd3pwpD2LVM_tcZ6NawR2uH6ox5ule_peEhRqumq5JOqg38KDnnqq4NVnDZWSXdpSofoOfmsx27xTZQ5BeF6fa0GKB7eOFes3tW8KV69nrpt8ncWWoaQQUDAmJ5COsbxSOmQvbtFAmLuAgypt-zaAJAOMzQYieWeUjtIoKCPd6PakEn7KWiYvPtTozlcqN8BYfEMBGUXaCxXxv_GxUleOSjF5JzIiVq9B2iw-6QnPLOQ4mWdz2epfq-LsOrb6oyrllyakvSVlZdwtKYFqtu-AnNmc93JWKGZDGVhnf-5hNta7NeBTswiDq4bex6lKPBlTy-4-VQ7Typ8ggxzG0fA
+```
+
+- ```yml
+  
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"name":"drone-deploy","namespace":"demo"}}
+    creationTimestamp: "2021-08-27T06:58:36Z"
+    name: drone-deploy
+    namespace: demo
+    resourceVersion: "876"
+    uid: b12e2042-2916-48e4-8d40-cbd5c3985d60
+  secrets:
+  
+  - name: drone-deploy-token-7xv2t
+  $ kubectl -n demo get \
+    secret/drone-deploy-token-7xv2t \
+    -o yaml | egrep 'ca.crt:|token:'
+  ```
+  
+  
+
+```yml
+# this config file contains all config fields with comments
+# NOTE: this is not a particularly useful config file
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  # WARNING: It is _strongly_ recommended that you keep this the default
+  # (127.0.0.1) for security reasons. However it is possible to change this.
+  apiServerAddress: "192.168.50.16"
+  # By default the API server listens on a random open port.
+  # You may choose a specific port but probably don't need to in most cases.
+  # Using a random port makes it easier to spin up multiple clusters.
+  apiServerPort: 6443
+# patch the generated kubeadm config with some extra settings
+kubeadmConfigPatches:
+- |
+  apiVersion: kubelet.config.k8s.io/v1beta1
+  kind: KubeletConfiguration
+  evictionHard:
+    nodefs.available: "0%"
+# patch it further using a JSON 6902 patch
+kubeadmConfigPatchesJSON6902:
+- group: kubeadm.k8s.io
+  version: v1beta2
+  kind: ClusterConfiguration
+  patch: |
+    - op: add
+      path: /apiServer/certSANs/-
+      value: my-hostname
+# 1 control plane node and 3 workers
+nodes:
+# the control plane node config
+- role: control-plane
+# the three workers
+- role: worker
+- role: worker
+- role: worker
+```
+
+
+
+
+  ```
+    ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1EZ3lOekEyTlRVeU5Gb1hEVE14TURneU5UQTJOVFV5TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUdtCk9mWldqcUhWaG9qTU1CSmlFYlpVQ0IyRU5oUjg1bUovOXBGbUdNLzA1Mkk4TmZSYnE4NEVRdUNrWER5U1Yxak0KQXVNOVIyUmlHNCs0a2VNM0ZPQWZ3bWpuOUpmUVpmeENSSUhiaExpcWZKVTNVTDZEM1hMUlIyajRRc3hUQUcwVwppOUVHSE8rMmV2TDNkRkFjUlNUZGFzbldybEk5RnBmN3l6cjlHU3gvWDNhc3pJNGthNjFPRUFOSHhhM2hPU2FRCmordW8rVzZIWDljWGRKTXlpZ2FxZldhNDRiK2xzbWRUQVBpakZJV1lWYTVyc3hyRnY2Qm1XMUROMEV2cEYvNDIKMVpRV1pBYVc3MFhMK1YyTVRIcUZFRmhvbzJDbzArbDM4b0dzZGpReFE3TFYwL3NPZ01zRFJnOEJDU0xtUzNsVQpCYlk4MjdHUThHR2VRTWlHYnhNQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZHdjh3cnF5dlE4Yk5sa3FacWVKeEhvN01jbGhNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFDMG9TR3hHVmNNNjFkUGdZdXlOMk5qdm80MW8zSDM5aFhIQVZyUHZZZUZrUks3ZlYzSApoZXUrYm5mbUlJK3V3ek0yaTNEY3JyRWRIWlV2RUtlelU5ZTBKKzc2UDQ3Y2hsSnZ1RHFpcmpmTWxYOWZuRllCClhaVEdnc0ZVbmY4M3lHSjBlbDVOaHNVM0JicHEwcUtOZ24xMkpCUXM5d0ZmaTNIaE9SSE85OUc5Zk4vSGR5cjEKV0JYbmpFYzNPc1pKZzVxZmR1RGZqWFlibkY0cGVjdnFpRjF6eU9kWmFhcUdza1hRWnIwOWVaaDU4aWdsUStxSwpRU0xGWDZYRnZNY1FrMEc3Vmg2c2FCemViTzJjY083cGtBMG9HVFQ2UHhoYVBZWEJFQzJrd050aDl0VGJiN3MrCnR3YUx6L0dBQ0N2dGh2YzdiWFFvNTA4U1VycjNTUjdCR0ZZRAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklsUXhOVTV5ZGtKMVRGcHBZVlV6UzBGVFNFaFljVTlQUVhBeU4wTk5SRXhRYmt0VmVYRlJjWHBJWXpBaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMDNlSFl5ZENJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSmlNVEpsTWpBME1pMHlPVEUyTFRRNFpUUXRPR1EwTUMxalltUTFZek01T0RWa05qQWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuajZSczVwdm5QQVFBZ2RielJBUjY2cHE1cXRDMFNhZE9tLXQtems4bmUxZVdFaWgwZnF6NEVDWHVmT1ZKTS1pMVd0bklLaGdJaDJxQTgtdmk1ZzI0U2RRZ19zdEd1YUtpdzJ6ZDItd1V6RDVscGphU3BJUmkzNFA2a2d4ZTZRWHplUzYwT2NUM1VCdzA5Sm02RUtwNW03S2xFSV9UWExpZTBreEQwTlR3Q3FDSlQ4MURCRFcxTGhQQTBBU2R4WUZmcEF0ZjhHV3VPYWduS3hOaVhMS2xZbTg1M21sVTc3RXRObkZDVWJsVnlFWEFNUmRLTUF2dzEwRS1EV3RPOHAwSW1FNE93c2xYZ21uN21xVGhUeDQ4R2lZV1F0UnZpeFNURVRHYTY4bW5Bc2xDUUdxWnB2ZHlsaE5GSXpvbHpkdGh5RE5xY2xCelIwZHd0enlwa0tGdEtR
+    echo ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklsUXhOVTV5ZGtKMVRGcHBZVlV6UzBGVFNFaFljVTlQUVhBeU4wTk5SRXhRYmt0VmVYRlJjWHBJWXpBaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWlcxdklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WldOeVpYUXVibUZ0WlNJNkltUnliMjVsTFdSbGNHeHZlUzEwYjJ0bGJpMDNlSFl5ZENJc0ltdDFZbVZ5Ym1WMFpYTXVhVzh2YzJWeWRtbGpaV0ZqWTI5MWJuUXZjMlZ5ZG1salpTMWhZMk52ZFc1MExtNWhiV1VpT2lKa2NtOXVaUzFrWlhCc2Iza2lMQ0pyZFdKbGNtNWxkR1Z6TG1sdkwzTmxjblpwWTJWaFkyTnZkVzUwTDNObGNuWnBZMlV0WVdOamIzVnVkQzUxYVdRaU9pSmlNVEpsTWpBME1pMHlPVEUyTFRRNFpUUXRPR1EwTUMxalltUTFZek01T0RWa05qQWlMQ0p6ZFdJaU9pSnplWE4wWlcwNmMyVnlkbWxqWldGalkyOTFiblE2WkdWdGJ6cGtjbTl1WlMxa1pYQnNiM2tpZlEuajZSczVwdm5QQVFBZ2RielJBUjY2cHE1cXRDMFNhZE9tLXQtems4bmUxZVdFaWgwZnF6NEVDWHVmT1ZKTS1pMVd0bklLaGdJaDJxQTgtdmk1ZzI0U2RRZ19zdEd1YUtpdzJ6ZDItd1V6RDVscGphU3BJUmkzNFA2a2d4ZTZRWHplUzYwT2NUM1VCdzA5Sm02RUtwNW03S2xFSV9UWExpZTBreEQwTlR3Q3FDSlQ4MURCRFcxTGhQQTBBU2R4WUZmcEF0ZjhHV3VPYWduS3hOaVhMS2xZbTg1M21sVTc3RXRObkZDVWJsVnlFWEFNUmRLTUF2dzEwRS1EV3RPOHAwSW1FNE93c2xYZ21uN21xVGhUeDQ4R2lZV1F0UnZpeFNURVRHYTY4bW5Bc2xDUUdxWnB2ZHlsaE5GSXpvbHpkdGh5RE5xY2xCelIwZHd0enlwa0tGdEtR| base64 -d && echo''
+    eyJhbGciOiJSUzI1NiIsImtpZCI6IlQxNU5ydkJ1TFppYVUzS0FTSEhYcU9PQXAyN0NNRExQbktVeXFRcXpIYzAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRyb25lLWRlcGxveS10b2tlbi03eHYydCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkcm9uZS1kZXBsb3kiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJiMTJlMjA0Mi0yOTE2LTQ4ZTQtOGQ0MC1jYmQ1YzM5ODVkNjAiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVtbzpkcm9uZS1kZXBsb3kifQ.j6Rs5pvnPAQAgdbzRAR66pq5qtC0SadOm-t-zk8ne1eWEih0fqz4ECXufOVJM-i1WtnIKhgIh2qA8-vi5g24SdQg_stGuaKiw2zd2-wUzD5lpjaSpIRi34P6kgxe6QXzeS60OcT3UBw09Jm6EKp5m7KlEI_TXLie0kxD0NTwCqCJT81DBDW1LhPA0ASdxYFfpAtf8GWuOagnKxNiXLKlYm853mlU77EtNnFCUblVyEXAMRdKMAvw10E-DWtO8p0ImE4OwslXgmn7mqThTx48GiYWQtRvixSTETGa68mnAslCQGqZpvdylhNFIzolzdthyDNqclBzR0dwtzypkKFtKQ
+  ```
+
+  遇到问题：
+
+  ![image-20210827153318109](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210827153318109.png)
+
+  Error from server (Forbidden): deployments.apps "k8s-node-demo" is forbidden: User "system:serviceaccount:demo:drone-deploy" cannot get resource "deployments" in API group "apps" in the namespace "demo" 
+
+rabc错误：
+
+WARNING: This allows any user with read access to secrets or the ability to create a pod to access super-user credentials.
+
+```yaml
+kubectl create clusterrolebinding serviceaccounts-cluster-admin \
+  --clusterrole=cluster-admin \
+  --group=system:serviceaccounts
+```
+
+解决：
+
+![image-20210827153904379](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20210827153904379.png)
+
+上面这种方式太暴力，正常应用赋予他权限，参看下面文档：
+
+[rabc]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#service-account-permissions
+
