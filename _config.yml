@@ -125,3 +125,8 @@ live2d:
   react:
     opacityDefault: 0.9 # 默认透明度
     opacityOnHover: 0.5 # 鼠标移上透明度
+admin:
+  username: huangxiaofeng
+  password_hash: $2a$10$RJeVWzJQvFn0bE8nDIRNpelBAdQiHPSGTJBkSrse7nQLXS54bd282
+  secret: hxf18482
+  deployCommand: './admin_script/hexo-generate.sh'    
