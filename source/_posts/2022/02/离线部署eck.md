@@ -7,5 +7,13 @@ tags:
 
 部署eck脚本话
 
-deploy.sh
+deploy.sh部署脚本--本脚本主要工作就是推送镜像到服务器。
+
+依赖：
+
+- elastic-operator
+
+- elasticsearch
+- kibana
+- filebeat
 

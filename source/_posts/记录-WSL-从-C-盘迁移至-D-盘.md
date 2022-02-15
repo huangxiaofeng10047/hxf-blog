@@ -36,10 +36,16 @@ LxRunOffline：一个非常强大的管理子系统的工具
 新建目标目录并授权
 
  $ icacls D:\wsl\installed /grant "hxf:(OI)(CI)(F)"
+
+icacls E:\wsl2\ubuntu /grant "Administrator:(OI)(CI)(F)"
+
 目标目录：D:\wsl\installed
 用户名：hxf
 迁移系统
 
  $ .\LxRunOffline move -n ArchLinux -d D:\wsl\installed\ArchLinux
+
+LxRunOffline move -n Ubuntu-20.04 -d  E:\wsl2\ubuntu
+
 Copy
 然后耐心等待一大堆 Warning 的结束
