@@ -122,7 +122,7 @@ spec:
       spec:
         accessModes:
         - ReadWriteOnce
-        storageClassName: cbs-csi 
+        storageClassName: nfs-csi 
         resources:
           requests:
             storage: 200Gi

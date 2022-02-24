@@ -91,7 +91,7 @@ cd C:\Users\hxf\AppData\Roaming\Typora\picgo\win64
     "gitee": {
       "repo": "hxf88/imgrepo",
       "branch": "master",
-      "token": "994875f6f8aacc9508dc707ade1485c1",
+      "token": "****",
       "path": "img",
       "customPath": "yearMonth",
       "customUrl": ""
