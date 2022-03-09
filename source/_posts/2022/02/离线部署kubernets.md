@@ -281,6 +281,9 @@ yum-config-manager --add-repo http://download.docker.com/linux/centos/docker-ce.
 
 yum -y install docker-ce-18.03.1.ce
 
+必备工具安装，建议所有节点安装:
+      yum install wget jq psmisc vim net-tools telnet yum-utils device-mapper-persistent-data lvm2 git -y
+
 ```
 
 安装kuboad
