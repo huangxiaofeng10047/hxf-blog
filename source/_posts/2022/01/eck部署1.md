@@ -93,7 +93,7 @@ metadata:
   namespace: logging
 spec:
   version: 7.12.0
-  image: ccr.ccs.tencentyun.com/XXXX/elasticsearch:7.12.0
+  image: www.harbor.mobi/kuboard/elasticsearch:7.12.0
   nodeSets:
   - name: laya
     count: 3
@@ -122,10 +122,10 @@ spec:
       spec:
         accessModes:
         - ReadWriteOnce
-        storageClassName: nfs-csi 
+        storageClassName: nfs-client	 
         resources:
           requests:
-            storage: 200Gi
+            storage: 100Gi
 EOF          
 ```
 
@@ -189,6 +189,10 @@ spec:
   count: 1
   elasticsearchRef:
     name: elastic
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true  
   podTemplate:
     spec:
       containers:

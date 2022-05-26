@@ -240,6 +240,8 @@ export WIN_IP=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`
 sed -i '/\[ProxyList\]/,$d' ~/.proxychains.conf
 # 往文件末尾添加socks5设置，这个 7890 是我的 qv②ray 的 socks5 端口号，改成你自己的
 echo '[ProxyList]\nsocks5 '${WIN_IP}' 7890' >> ~/.proxychains.conf
+echo 'socks5 '${WIN_IP}' 7890' >> ~/.proxychains.conf
+
 # 设置别名；使用 ~/.proxychains.conf 作为proxychains的配置文件；让proxychains quiet（不输出一大串东西）
 alias pc='proxychains4 -q -f ~/.proxychains.conf'
 # 用来手动开关代理，建议走 http 协议，因为 wget 不支持 socks5

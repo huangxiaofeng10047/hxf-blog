@@ -71,3 +71,7 @@ yum makecache
 当出现下图时，证明成功
 
 ![image-20220303091511447](https://gitee.com/hxf88/imgrepo/raw/master/img/image-20220303091511447.png)
+
+开机启动服务：
+
+在linux下，有一个目录专门用以管理所有的服务的启动脚本的，即/etc/rc.d/init.d下，进去看看，

@@ -63,3 +63,61 @@ kubectl apply -f /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
 ![image-20220106142209114](https://s2.loli.net/2022/01/06/F68w7SYsxVLreuM.png)
+
+nacos-ingeress:
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nacos-headless-http
+  namespace: bcs-dev
+  annotations:
+    kubernetes.io/ingress.class: traefik  
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - host: nacos-server.bcs236.com 
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: nacos-headless
+            port:
+              number: 8848
+
+```
+
+```
+10.0.37.144 nacos-server.bcs236.com 
+```
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nacos-headless-http
+  namespace: bcs-dev
+  annotations:
+    kubernetes.io/ingress.class: traefik  
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - host: nacos-server.bcs227.com 
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: nacos-headless
+            port:
+              number: 8848
+```
+
+```
+11.0.37.100 nacos-server.bcs227.com
+```
+

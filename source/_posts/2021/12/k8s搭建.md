@@ -126,7 +126,7 @@ kubeadm reset
 systemctl daemon-reload
 systemctl restart kubelet
 iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X 
-————————————————
+------------------------------------------------
 版权声明：本文为CSDN博主「不忘初心fight」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/weixin_41831919/article/details/118713869
 
@@ -145,6 +145,11 @@ rm -rf /etc/cni
 rm -rf /opt/cni
 rm -rf /var/lib/etcd
 rm -rf /var/etcd
+rm -rf /opt/cni 
+rm -rf /var/lib/cni /var/log/calico/cni /opt/cni /rootfs/etc/service/enabled/cni /rootfs/host/etc/cni
+iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X 
+ipvsadm --clear
+rm -rf /var/lib/kubelet /var/lib/dockershim /var/run/kubernetes /var/lib/cni
 yum clean all
 yum remove kube*
 ```
@@ -313,3 +318,37 @@ Error writing Crisocket information for the control-plane node: timed out waitin
 ```
 swapoff -a && kubeadm reset  && systemctl daemon-reload && systemctl restart kubelet  && iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
 ```
+
+
+
+
+
+
+
+
+
+导入镜像
+
+
+
+quay.io/calico/node:v3.21.2
+
+ ctr --namespace k8s.io image import node.tar
+
+
+
+
+
+
+
+
+
+
+
+# Impossible to create or start a container after reboot (OCI runtime create failed: expected cgroupsPath to be of format \"slice:prefix:name\" for systemd cgroups, got \"/kubepods/burstable/...")
+
+This error is happening because kubelet is configured to use cgroupfs cgroup driver while containerd is configured to use sytemd cgroup driver.
+
+To let containerd use cgroupfs driver, you need to remove `SystemdCgroup = true` line from `/etc/containerd/config.toml`.
+
+To let kubelet use systemd driver, you need to set `cgroupDriver` in `KubeletConfiguration` to "systemd".
